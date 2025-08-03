@@ -1,0 +1,111 @@
+/* Light theme - prism-one-light colors */
+.code-editor-light .token.comment,
+.code-editor-light .token.prolog,
+.code-editor-light .token.doctype,
+.code-editor-light .token.cdata {
+  color: #a0a1a7;
+}
+
+.code-editor-light .token.punctuation {
+  color: #383a42;
+}
+
+.code-editor-light .token.property,
+.code-editor-light .token.tag,
+.code-editor-light .token.boolean,
+.code-editor-light .token.number,
+.code-editor-light .token.constant,
+.code-editor-light .token.symbol,
+.code-editor-light .token.deleted {
+  color: #e45649;
+}
+
+.code-editor-light .token.selector,
+.code-editor-light .token.attr-name,
+.code-editor-light .token.string,
+.code-editor-light .token.char,
+.code-editor-light .token.builtin,
+.code-editor-light .token.inserted {
+  color: #50a14f;
+}
+
+.code-editor-light .token.operator,
+.code-editor-light .token.entity,
+.code-editor-light .token.url,
+.code-editor-light .language-css .token.string,
+.code-editor-light .style .token.string {
+  color: #0184bc;
+}
+
+.code-editor-light .token.atrule,
+.code-editor-light .token.attr-value,
+.code-editor-light .token.keyword {
+  color: #a626a4;
+}
+
+.code-editor-light .token.function,
+.code-editor-light .token.class-name {
+  color: #c18401;
+}
+
+.code-editor-light .token.regex,
+.code-editor-light .token.important,
+.code-editor-light .token.variable {
+  color: #e45649;
+}
+
+/* Dark theme - prism-one-dark colors */
+.code-editor-dark .token.comment,
+.code-editor-dark .token.prolog,
+.code-editor-dark .token.doctype,
+.code-editor-dark .token.cdata {
+  color: #5c6370;
+}
+
+.code-editor-dark .token.punctuation {
+  color: #abb2bf;
+}
+
+.code-editor-dark .token.property,
+.code-editor-dark .token.tag,
+.code-editor-dark .token.boolean,
+.code-editor-dark .token.number,
+.code-editor-dark .token.constant,
+.code-editor-dark .token.symbol,
+.code-editor-dark .token.deleted {
+  color: #e06c75;
+}
+
+.code-editor-dark .token.selector,
+.code-editor-dark .token.attr-name,
+.code-editor-dark .token.string,
+.code-editor-dark .token.char,
+.code-editor-dark .token.builtin,
+.code-editor-dark .token.inserted {
+  color: #98c379;
+}
+
+.code-editor-dark .token.operator,
+.code-editor-dark .token.entity,
+.code-editor-dark .token.url,
+.code-editor-dark .language-css .token.string,
+.code-editor-dark .style .token.string {
+  color: #56b6c2;
+}
+
+.code-editor-dark .token.atrule,
+.code-editor-dark .token.attr-value,
+.code-editor-dark .token.keyword {
+  color: #c678dd;
+}
+
+.code-editor-dark .token.function,
+.code-editor-dark .token.class-name {
+  color: #e6c07b;
+}
+
+.code-editor-dark .token.regex,
+.code-editor-dark .token.important,
+.code-editor-dark .token.variable {
+  color: #e06c75;
+}
