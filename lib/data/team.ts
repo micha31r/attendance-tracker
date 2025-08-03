@@ -7,7 +7,7 @@ export type Team = {
   organisation_id: string
   name: string
   created_at: string
-  default_attendee_data?: string
+  default_attendee_data?: Member[]
 }
 
 export async function createTeam(

@@ -32,6 +32,7 @@ import {
 import Link from "next/link"
 import { Team } from "@/lib/data/team"
 import { CreateTeamContextData, CreateTeamSheet } from "./create-team-sheet"
+import { Member } from "@/lib/data/member"
 
 export const columns: ColumnDef<Team>[] = [
   {
@@ -45,8 +46,8 @@ export const columns: ColumnDef<Team>[] = [
     accessorKey: "default_attendee_data",
     header: () => <div className="text-muted-foreground">Default attendees</div>,
     cell: ({ row }) => {
-      const attendees = JSON.parse(row.getValue("default_attendee_data") || "{}")
-      return <div className="font-medium text-muted-foreground">{attendees.count || 0}</div>
+      const attendees = (row.getValue("default_attendee_data") || []) as Member[]
+      return <div className="font-medium text-muted-foreground">{attendees.length || 0}</div>
     },
   },
   {
