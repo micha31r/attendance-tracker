@@ -1,5 +1,6 @@
 "use server"
 import { createClient } from "../supabase/server"
+import { Member, removeDuplicateMembers } from "./member"
 
 export type Team = {
   id: string
@@ -61,4 +62,27 @@ export async function getTeamsByOrganisationId(organisation_id: string): Promise
   }
 
   return data || []
+}
+
+export async function updateDefaultAttendeeData(
+  teamId: string,
+  attendeeData: Member[]
+): Promise<Team | null> {
+  const supabase = await createClient()
+
+  const uniqueAttendeeData = removeDuplicateMembers(attendeeData)
+
+  const { data, error } = await supabase
+    .from('team')
+    .update({ default_attendee_data: uniqueAttendeeData })
+    .eq('id', teamId)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error updating default attendee data:', error)
+    return null
+  }
+
+  return data
 }

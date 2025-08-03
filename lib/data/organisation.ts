@@ -1,10 +1,11 @@
 "use server"
 import { createClient } from "../supabase/server"
+import { Member } from "./member"
 
 export type Organisation = {
   id: string
   name: string
-  member_data?: string
+  member_data: Member[] | null,
   owner_id: string
   created_at: string
 }

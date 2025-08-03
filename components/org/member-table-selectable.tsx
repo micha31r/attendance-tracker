@@ -3,18 +3,23 @@
 import * as React from "react"
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
   useReactTable,
-  GlobalFilterTableState,
+  VisibilityState,
 } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -31,72 +36,106 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Member } from "@/lib/data/member"
-import { AddMemberSheet } from "./add-member-sheet"
+
+const memberData: Member[] = [
+  {
+    firstName: "John",
+    lastName: "Doe",
+    email: "john.doe@example.com"
+  },
+  {
+    firstName: "Jane",
+    lastName: "Smith",
+    email: "jane.smith@example.com",
+  },
+  {
+    firstName: "Alice",
+    lastName: "Johnson",
+    email: "alice.johnson@example.com"
+  },
+  {
+    firstName: "John",
+    lastName: "Doe",
+    email: "john.doe@example.com"
+  },
+]
 
 export const columns: ColumnDef<Member>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "firstName",
     header: "First Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("firstName")}</div>
+      <div className="capitalize line-clamp-1">{row.getValue("firstName")}</div>
     ),
   },
   {
     accessorKey: "lastName",
     header: "Last Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("lastName")}</div>
+      <div className="capitalize line-clamp-1">{row.getValue("lastName")}</div>
     ),
   },
   {
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("email")}</div>
+      <div className="lowercase line-clamp-1">{row.getValue("email")}</div>
     ),
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const member = row.original
-
-      return (
-        <div className="flex justify-end">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(member.email)}
-              >
-                Copy email
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Remove</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )
+    meta: {
+      hideByDefault: true,
     },
   },
 ]
 
-export function MemberTable({ data, addMemberAction }: { data: Member[], addMemberAction?: React.ReactNode }) {
+export function MemberTableSelectable({ data, onChange }: { data: Member[]; onChange?: (selectedMembers: Member[]) => void }) {
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({ email: true })
+  const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState("")
+
+  React.useEffect(() => {
+    const selectedRows = Object.keys(rowSelection).filter(key => data[key])
+    const selectedMembers = selectedRows.map(rowIndex => data[parseInt(rowIndex)])
+    console.log('Selected members:', selectedMembers)
+    onChange?.(selectedMembers)
+  }, [rowSelection])
 
   const table = useReactTable({
     data,
     columns,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
     state: {
+      sorting,
+      columnVisibility,
+      rowSelection,
       globalFilter,
     },
     onGlobalFilterChange: setGlobalFilter,
@@ -111,15 +150,14 @@ export function MemberTable({ data, addMemberAction }: { data: Member[], addMemb
   })
 
   return (
-    <div className="w-full">
-      <div className="flex items-center gap-4 justify-between py-4">
+    <div className="flex-1 w-full overflow-hidden">
+      <div className="flex items-center py-4">
         <Input
           placeholder="Filter members..."
           value={globalFilter ?? ""}
           onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
-        {addMemberAction}
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -144,7 +182,10 @@ export function MemberTable({ data, addMemberAction }: { data: Member[], addMemb
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -159,7 +200,7 @@ export function MemberTable({ data, addMemberAction }: { data: Member[], addMemb
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-12 text-center"
+                  className="h-24 text-center"
                 >
                   No results.
                 </TableCell>
@@ -170,7 +211,8 @@ export function MemberTable({ data, addMemberAction }: { data: Member[], addMemb
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
-          Total {table.getFilteredRowModel().rows.length} row(s)
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <div className="space-x-2">
           <Button

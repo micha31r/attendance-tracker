@@ -1,12 +1,11 @@
 "use client"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Member } from "@/lib/data/member"
+import { Member, MembersArraySchema, MemberSchema, parseMemberJSON } from "@/lib/data/member"
 import { MemberTable } from "./member-table"
 import { useEffect, useState } from "react";
 import { CodeEditor } from "./code-editor";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { z } from "zod";
 
 function Code({ children }: { children: React.ReactNode }) {
   return (
@@ -16,26 +15,7 @@ function Code({ children }: { children: React.ReactNode }) {
   )
 }
 
-const MemberSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  email: z.string().email(),
-});
-
-const MembersArraySchema = z.array(MemberSchema);
-
-function parseJSON(data: string) {
-  try {
-    const parsed = JSON.parse(data);
-    const result = MembersArraySchema.safeParse(parsed);
-    return result;
-  } catch (error) {
-    console.warn("Error parsing JSON:", error);
-    return null;
-  }
-}
-
-export function MemberView({ initialData }: { initialData: Member[] }) {
+export function MemberView({ initialData, onChange, addMemberAction }: { initialData: Member[]; onChange?: (data: Member[]) => void; addMemberAction?: React.ReactNode }) {
   const [code, setCode] = useState(JSON.stringify(initialData, null, 4));
   const [data, setData] = useState<Member[]>(initialData);
 
@@ -48,12 +28,15 @@ export function MemberView({ initialData }: { initialData: Member[] }) {
   }
 
   useEffect(() => {
-    const parsed = parseJSON(code);
-    if (parsed && parsed.success) {
-      setData(parsed.data);
-    } else {
-      console.warn("Invalid JSON format or missing required fields");
-    }
+    (async () => {
+      const parsed = parseMemberJSON(code);
+      if (parsed && parsed.success) {
+        setData(parsed.data);
+        onChange?.(parsed.data);
+      } else {
+        console.warn("Invalid JSON format or missing required fields");
+      }
+    })();
   }, [code]);
 
   return (
@@ -63,7 +46,7 @@ export function MemberView({ initialData }: { initialData: Member[] }) {
         <TabsTrigger value="password">Raw data (JSON)</TabsTrigger>
       </TabsList>
       <TabsContent value="account">
-        <MemberTable data={data} />
+        <MemberTable data={data} addMemberAction={addMemberAction} />
       </TabsContent>
       <TabsContent value="password" className="space-y-2">
         <Alert variant="default" className="bg-secondary">

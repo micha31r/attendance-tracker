@@ -3,30 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getTeamById } from "@/lib/data/team";
 import { EventTable } from "@/components/org/event-table";
 import { getEventsByTeamId } from "@/lib/data/event";
-import { MemberView } from "@/components/org/member-view";
-
-const memberData = [
-  {
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com"
-  },
-  {
-    firstName: "Jane",
-    lastName: "Smith",
-    email: "jane.smith@example.com",
-  },
-  {
-    firstName: "Alice",
-    lastName: "Johnson",
-    email: "alice.johnson@example.com"
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com"
-  },
-]
+import TeamMemberView from "@/components/org/team-member-view";
+import { Member } from "@/lib/data/member";
 
 export default async function TeamDetailPage({ params }: { params: { orgId: string, teamId: string } }) {
   const supabase = await createClient();
@@ -53,7 +31,11 @@ export default async function TeamDetailPage({ params }: { params: { orgId: stri
       </div>
       <div className="space-y-4">
         <h1 className="text-2xl font-semibold">Members</h1>
-        <MemberView initialData={memberData} />
+        <TeamMemberView initialData={(team.default_attendee_data || []) as Member[]} teamId={team.id} />
+      </div>
+      <div className="space-y-4">
+        <h1 className="text-2xl font-semibold">Attendance</h1>
+        <div className="min-h-96"></div>
       </div>
     </main>
   );
