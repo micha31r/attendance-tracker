@@ -164,6 +164,9 @@ export function TeamTable({ data, contextData }: { data: Team[], contextData: Cr
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="text-muted-foreground flex-1 text-sm">
+          Total {table.getFilteredRowModel().rows.length} row(s)
+        </div>
         <div className="space-x-2">
           <Button
             variant="outline"
