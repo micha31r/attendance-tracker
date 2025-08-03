@@ -19,7 +19,7 @@ import { MemberTableSelectable } from "./member-table-selectable"
 import { getTeamById, Team, updateDefaultAttendeeData } from "@/lib/data/team"
 import { Member, mergeMemberData } from "@/lib/data/member"
 
-export function AddMemberFromOrgSheet({ trigger }: { trigger: React.ReactNode }) {
+export function AddTeamMemberSheet({ trigger }: { trigger: React.ReactNode }) {
   const [disabled, setDisabled] = useState(false)
   const { teamId }: { teamId: string } = useParams()
   const [organisation, setOrganisation] = useState<Organisation | null>(null)
