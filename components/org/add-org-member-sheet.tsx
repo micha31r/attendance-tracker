@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect, useRef } from "react"
+import { useRouter, useParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -26,7 +26,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 
-import { createOrganisation } from "@/lib/data/organisation"
+import { getOrganisationById, Organisation, updateOrgMemberData } from "@/lib/data/organisation"
+import { Member, mergeMemberData } from "@/lib/data/member"
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -40,8 +41,11 @@ const formSchema = z.object({
   }),
 })
 
-export function AddMemberSheet({ trigger }: { trigger: React.ReactNode }) {
+export function AddOrgMemberSheet({ trigger }: { trigger: React.ReactNode }) {
   const [disabled, setDisabled] = useState(false)
+  const { orgId }: { orgId: string } = useParams()
+  const [organisation, setOrganisation] = useState<Organisation | null>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -56,17 +60,44 @@ export function AddMemberSheet({ trigger }: { trigger: React.ReactNode }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setDisabled(true)
 
-    // const data = await createOrganisation(values.firstName)
-    // if (!data) {
-    //   form.setError("name", {
-    //     type: "manual",
-    //     message: "Failed to create organisation. Please try again.",
-    //   })
-    //   setDisabled(false)
-    //   return
-    // }
+    if (!organisation) {
+      console.error("Organisation is not set")
+      setDisabled(false)
+      return
+    }
 
-    // router.push("/org/" + data.id)
+    const mergedMembers = mergeMemberData([values], (organisation.member_data || []) as Member[])
+    const data = await updateOrgMemberData(orgId, mergedMembers)
+    if (!data) {
+      console.error("Failed to update organisation members")
+      setDisabled(false)
+    }
+
+    closeButtonRef.current?.click()
+    window.location.reload()
+  }
+
+  useEffect(() => {
+    (async () => {
+      if (!orgId) {
+        console.error("Organisation ID is not available")
+        router.push("/org")
+        return
+      }
+
+      const org = await getOrganisationById(orgId)
+      if (!org) {
+        console.error("Organisation not found")
+        router.push("/org")
+        return
+      }
+
+      setOrganisation(org)
+    })()
+  }, [])
+  
+  if (!organisation) {
+    return null
   }
   
   return (
@@ -76,15 +107,15 @@ export function AddMemberSheet({ trigger }: { trigger: React.ReactNode }) {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Add member</SheetTitle>
+          <SheetTitle>Add org member</SheetTitle>
           <SheetDescription>
-            Add a new member to this team. They must be a part of this organisation.
+            Add people to your organisation using their first name, last name, and email address.
           </SheetDescription>
         </SheetHeader>
 
         <div className="grid flex-1 auto-rows-min gap-6 px-4">
           <Form {...form}>
-            <form id="create-org-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form id="add-org-member-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="firstName"
@@ -129,8 +160,8 @@ export function AddMemberSheet({ trigger }: { trigger: React.ReactNode }) {
         </div>
 
         <SheetFooter>
-          <Button type="submit" form="create-org-form" disabled={disabled}>Add member</Button>
-          <SheetClose asChild>
+           <Button type="submit" form="add-org-member-form" disabled={disabled}>Add org member</Button>
+          <SheetClose asChild ref={closeButtonRef}>
             <Button variant="outline">Cancel</Button>
           </SheetClose>
         </SheetFooter>

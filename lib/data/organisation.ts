@@ -1,6 +1,6 @@
 "use server"
 import { createClient } from "../supabase/server"
-import { Member } from "./member"
+import { Member, removeDuplicateMembers } from "./member"
 
 export type Organisation = {
   id: string
@@ -61,4 +61,27 @@ export async function getAllOrganisations(owner_id: string): Promise<Organisatio
   }
 
   return data || []
+}
+
+export async function updateOrgMemberData(
+  orgId: string,
+  memberData: Member[]
+): Promise<Organisation | null> {
+  const supabase = await createClient()
+
+  const uniqueMemberData = removeDuplicateMembers(memberData)
+
+  const { data, error } = await supabase
+    .from('organisation')
+    .update({ member_data: uniqueMemberData })
+    .eq('id', orgId)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error updating org member data:', error)
+    return null
+  }
+
+  return data
 }
