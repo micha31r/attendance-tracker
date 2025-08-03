@@ -5,7 +5,7 @@ import { MemberView } from "@/components/org/member-view";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { updateEventAttendeeData } from "@/lib/data/event";
-import { AddEventMemberSheet } from "./add-event-member-sheet";
+import { AddEventGuestSheet } from "./add-event-guest-sheet";
 
 export default function EventMemberView({ initialData, eventId }: { initialData: Member[], eventId: string }) {
   const [updatedMemberData, setUpdatedMemberData] = useState<Member[]>();
@@ -33,7 +33,7 @@ export default function EventMemberView({ initialData, eventId }: { initialData:
 
   return (
     <div>
-      <MemberView initialData={initialData} onChange={onChange} addMemberAction={<AddEventMemberSheet trigger={<Button variant="outline">Add attendee</Button>} />} />
+      <MemberView initialData={initialData} onChange={onChange} addMemberAction={<AddEventGuestSheet trigger={<Button variant="outline">Add guest attendee</Button>} />} />
       {showSaveButton && (
         <div className="flex gap-2 mt-2">
           <Button className="flex-1" variant="outline" onClick={() => window.location.reload()}>Discard changes</Button>

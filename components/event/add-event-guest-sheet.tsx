@@ -41,7 +41,7 @@ const formSchema = z.object({
   }),
 })
 
-export function AddEventMemberSheet({ trigger }: { trigger: React.ReactNode }) {
+export function AddEventGuestSheet({ trigger }: { trigger: React.ReactNode }) {
   const [disabled, setDisabled] = useState(false)
   const { eventId }: { eventId: string } = useParams()
   const [event, setEvent] = useState<Event | null>(null)
@@ -107,7 +107,7 @@ export function AddEventMemberSheet({ trigger }: { trigger: React.ReactNode }) {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Add attendee</SheetTitle>
+          <SheetTitle>Add guest attendee</SheetTitle>
           <SheetDescription>
             Add expected attendees to the event &quot;{event.name}&quot;.
           </SheetDescription>
@@ -160,7 +160,7 @@ export function AddEventMemberSheet({ trigger }: { trigger: React.ReactNode }) {
         </div>
 
         <SheetFooter>
-           <Button type="submit" form="add-event-member-form" disabled={disabled}>Add attendee</Button>
+           <Button type="submit" form="add-event-member-form" disabled={disabled}>Add guest attendee</Button>
           <SheetClose asChild ref={closeButtonRef}>
             <Button variant="outline">Cancel</Button>
           </SheetClose>
