@@ -33,6 +33,7 @@ import Link from "next/link"
 import { Team } from "@/lib/data/team"
 import { CreateEventContextData, CreateEventSheet } from "./create-event-sheet"
 import { Event } from "@/lib/data/event"
+import { Member } from "@/lib/data/member"
 
 export const columns: ColumnDef<Event>[] = [
   {
@@ -46,8 +47,8 @@ export const columns: ColumnDef<Event>[] = [
     accessorKey: "attendee_data",
     header: () => <div className="text-muted-foreground">Attendees</div>,
     cell: ({ row }) => {
-      const attendees = JSON.parse(row.getValue("attendee_data") || "{}")
-      return <div className="font-medium text-muted-foreground">{attendees.count || 0}</div>
+      const attendees = (row.getValue("attendee_data") || []) as Member[]
+      return <div className="font-medium text-muted-foreground">{attendees.length || 0}</div>
     },
   },
   {
