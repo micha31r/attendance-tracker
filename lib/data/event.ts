@@ -1,6 +1,6 @@
 "use server"
 import { createClient } from "../supabase/server"
-import { Organisation } from "./organisation"
+import { Member, removeDuplicateMembers } from "./member"
 
 export type Event = {
   id: string
@@ -9,7 +9,7 @@ export type Event = {
   attendance_open_duration: number,
   attendance_open_from: Date,
   accept_attendance: boolean,
-  attendee_data?: string,
+  attendee_data?: Member[] | null,
   event_start: string,
   created_at: string
 }
@@ -86,3 +86,25 @@ export async function getEventsByTeamId(team_id: string): Promise<Event[]> {
   return data || []
 }
 
+export async function updateEventAttendeeData(
+  eventId: string,
+  attendeeData: Member[]
+): Promise<Event | null> {
+  const supabase = await createClient()
+
+  const uniqueMemberData = removeDuplicateMembers(attendeeData)
+
+  const { data, error } = await supabase
+    .from('event')
+    .update({ attendee_data: uniqueMemberData })
+    .eq('id', eventId)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error updating event attendee data:', error)
+    return null
+  }
+
+  return data
+}
