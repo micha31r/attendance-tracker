@@ -2,7 +2,7 @@
 
 import { Member } from "@/lib/data/member";
 import { MemberView } from "./member-view";
-import { AddMemberSheet } from "./add-member-sheet";
+import { AddMemberFromOrgSheet } from "./add-member-from-org-sheet";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { updateDefaultAttendeeData } from "@/lib/data/team";
@@ -33,7 +33,7 @@ export default function TeamMemberView({ initialData, teamId }: { initialData: M
 
   return (
     <div>
-      <MemberView initialData={initialData} onChange={onChange} addMemberAction={<AddMemberSheet trigger={<Button variant="outline">Add members</Button>} />} />
+      <MemberView initialData={initialData} onChange={onChange} addMemberAction={<AddMemberFromOrgSheet trigger={<Button variant="outline">Add members</Button>} />} />
       {showSaveButton && (
         <div className="flex gap-2 mt-2">
           <Button className="flex-1" variant="outline" onClick={() => window.location.reload()}>Discard changes</Button>

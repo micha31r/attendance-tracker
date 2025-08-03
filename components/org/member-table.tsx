@@ -8,7 +8,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
-  GlobalFilterTableState,
 } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 
@@ -31,7 +30,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Member } from "@/lib/data/member"
-import { AddMemberSheet } from "./add-member-sheet"
 
 export const columns: ColumnDef<Member>[] = [
   {

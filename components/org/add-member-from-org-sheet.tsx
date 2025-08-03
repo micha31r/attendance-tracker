@@ -17,21 +17,9 @@ import {
 import { getOrganisationById, Organisation } from "@/lib/data/organisation"
 import { MemberTableSelectable } from "./member-table-selectable"
 import { getTeamById, Team, updateDefaultAttendeeData } from "@/lib/data/team"
-import { getMemberDataFromJSON, Member, MembersArraySchema, mergeMemberData, parseMemberJSON } from "@/lib/data/member"
+import { Member, mergeMemberData } from "@/lib/data/member"
 
-const formSchema = z.object({
-  firstName: z.string().min(2, {
-    message: "First name must be at least 2 characters.",
-  }),
-  lastName: z.string().min(2, {
-    message: "Last name must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-})
-
-export function AddMemberSheet({ trigger }: { trigger: React.ReactNode }) {
+export function AddMemberFromOrgSheet({ trigger }: { trigger: React.ReactNode }) {
   const [disabled, setDisabled] = useState(false)
   const { teamId }: { teamId: string } = useParams()
   const [organisation, setOrganisation] = useState<Organisation | null>(null)
