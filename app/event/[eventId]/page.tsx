@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card"
 import QRCode from "react-qr-code"
 import { ShareLinkButton } from "@/components/event/share-link-button";
+import Link from "next/link";
 
 function buildResponderLink(eventId: string) {
   return `${process.env.NEXT_PUBLIC_DOMAIN}/r/${eventId}`
@@ -41,7 +42,7 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
             <div className="grid grid-cols-1 sm:grid-cols-[1fr_max-content] gap-8 sm:gap-4">
               <div className="space-y-4 max-w-xs">
                 <h1 className="leading-none">Responder link</h1>
-                <p className="break-all leading-normal">{responderLink}</p>
+                <Link className="block break-all leading-normal" href={responderLink}>{responderLink}</Link>
                 <ShareLinkButton className="w-max" link={responderLink} />
               </div>
 
