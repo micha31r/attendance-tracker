@@ -1,17 +1,17 @@
 "use server"
 import { createClient } from "../supabase/server"
+import { createAttendance, deleteAttendance } from "./attendance"
 import { Member, removeDuplicateMembers } from "./member"
 
 export type Event = {
   id: string
   team_id: string
   name: string,
-  attendance_open_duration: number,
-  attendance_open_from: Date,
-  accept_attendance: boolean,
+  attendance_open_from: string | Date,
+  attendance_open_until: string | Date,
   attendee_data?: Member[] | null,
-  event_start: string,
-  created_at: string
+  event_start: string | Date,
+  created_at: string | Date
 }
 
 export async function createEvent(
@@ -94,17 +94,44 @@ export async function updateEventAttendeeData(
 
   const uniqueMemberData = removeDuplicateMembers(attendeeData)
 
-  const { data, error } = await supabase
+  const { data: eventData, error: eventError } = await supabase
     .from('event')
     .update({ attendee_data: uniqueMemberData })
     .eq('id', eventId)
     .select()
     .single()
 
-  if (error) {
-    console.error('Error updating event attendee data:', error)
+  if (eventError) {
+    console.error('Error updating event attendee data:', eventError)
     return null
   }
 
-  return data
+  const { data: attendanceData, error: attendanceError } = await supabase
+    .from('attendance')
+    .select()
+    .eq('event_id', eventId)
+
+  if (attendanceError) {
+    console.error('Error fetching attendance data:', attendanceError)
+    return null
+  }
+
+  // Find members to add and remove
+  const existingEmails = new Set(attendanceData?.map(att => att.email) || [])
+  const newEmails = new Set(uniqueMemberData.map(member => member.email))
+  
+  const membersToAdd = uniqueMemberData.filter(member => !existingEmails.has(member.email))
+  const attendanceToDelete = attendanceData?.filter(att => !newEmails.has(att.email)) || []
+
+  // Execute all operations concurrently
+  const operations = [
+    ...membersToAdd.map(member => createAttendance(eventId, member.email, member.guest)),
+    ...attendanceToDelete.map(att => deleteAttendance(eventId, att.email))
+  ]
+
+  if (operations.length > 0) {
+    await Promise.all(operations)
+  }
+
+  return eventData
 }

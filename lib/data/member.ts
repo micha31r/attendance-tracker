@@ -4,12 +4,14 @@ export type Member = {
   firstName: string,
   lastName: string,
   email: string,
+  guest?: boolean
 }
 
 export const MemberSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.string().email(),
+  guest: z.boolean().optional()
 });
 
 export const MembersArraySchema = z.array(MemberSchema);
