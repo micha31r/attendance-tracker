@@ -69,7 +69,7 @@ export function DeleteEventDialog({ name, id, trigger }: { name: string, id: str
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button onClick={onSubmit} disabled={disabled}>Save changes</Button>
+            <Button onClick={onSubmit} disabled={disabled}>Delete forever</Button>
           </DialogFooter>
         </DialogContent>
       </div>
