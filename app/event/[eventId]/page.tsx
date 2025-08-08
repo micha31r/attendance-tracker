@@ -40,30 +40,29 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
   return (
     <main className="max-w-screen-sm mx-auto p-4 space-y-8">
       <h1 className="text-4xl font-semibold">{event.name}</h1>
-      <div className="space-y-4">
-        <Card>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-[1fr_max-content] gap-8 sm:gap-4">
-              <div className="space-y-4 max-w-xs">
-                <h1 className="leading-none">Responder link</h1>
-                <Link className="block break-all leading-normal" href={responderLink}>{responderLink}</Link>
-                <ShareLinkButton className="w-max" link={responderLink} />
-              </div>
+      
+      <Card>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_max-content] gap-8 sm:gap-4">
+            <div className="space-y-4 max-w-xs">
+              <h1 className="leading-none">Responder link</h1>
+              <Link className="block break-all leading-normal" href={responderLink}>{responderLink}</Link>
+              <ShareLinkButton className="w-max" link={responderLink} />
+            </div>
 
-              <div className="flex flex-wrap gap-4 justify-between mx-auto sm:mx-0">
-                <div className="w-28 h-max p-1 bg-white">
-                  <QRCode
-                    className="h-auto max-w-full w-full"
-                    size={256}
-                    value={responderLink}
-                    viewBox={`0 0 256 256`}
-                    />
-                </div>
+            <div className="flex flex-wrap gap-4 justify-between mx-auto sm:mx-0">
+              <div className="w-28 h-max p-1 bg-white">
+                <QRCode
+                  className="h-auto max-w-full w-full"
+                  size={256}
+                  value={responderLink}
+                  viewBox={`0 0 256 256`}
+                  />
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
