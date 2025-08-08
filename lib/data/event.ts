@@ -28,12 +28,20 @@ export async function createEvent(
   team_id: string,
   name: string,
   event_start: string,
+  attendance_open_from: string | Date,
+  attendance_open_until: string | Date
 ): Promise<Event | null> {
   const supabase = await createClient()
 
   const { data, error } = await supabase
     .from('event')
-    .insert({ team_id, name, event_start })
+    .insert({ 
+      team_id, 
+      name, 
+      event_start, 
+      attendance_open_from, 
+      attendance_open_until 
+    })
     .select()
     .single()
 

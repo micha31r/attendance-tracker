@@ -39,6 +39,18 @@ const formSchema = z.object({
   }, {
     message: "Invalid date format.",
   }),
+  attendance_open_from: z.string().refine((val) => {
+    const date = new Date(val)
+    return !isNaN(date.getTime())
+  }, {
+    message: "Invalid date format.",
+  }),
+  attendance_open_until: z.string().refine((val) => {
+    const date = new Date(val)
+    return !isNaN(date.getTime())
+  }, {
+    message: "Invalid date format.",
+  }),
 })
 
 export type CreateEventContextData = {
@@ -49,18 +61,29 @@ export function CreateEventSheet({ trigger, contextData }: { trigger: React.Reac
   const [disabled, setDisabled] = useState(false)
   const router = useRouter()
 
+  const now = new Date()
+  const fifteenMinutesLater = new Date(now.getTime() + 15 * 60 * 1000)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      event_start: new Date().toISOString()
+      event_start: now.toISOString(),
+      attendance_open_from: now.toISOString(),
+      attendance_open_until: fifteenMinutesLater.toISOString(),
     },
   })
   
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setDisabled(true)
 
-    const data = await createEvent(contextData.team_id, values.name, values.event_start)
+    const data = await createEvent(
+      contextData.team_id, 
+      values.name, 
+      values.event_start, 
+      values.attendance_open_from, 
+      values.attendance_open_until
+    )
     if (!data) {
       form.setError("name", {
         type: "manual",
@@ -108,6 +131,52 @@ export function CreateEventSheet({ trigger, contextData }: { trigger: React.Reac
                 render={({ field }) => (
                   <FormItem className="space-y-2">
                     <FormLabel>Event start</FormLabel>
+                    <FormControl>
+                      <DatetimePicker
+                        defaultValue={
+                          typeof field.value === "string"
+                            ? new Date(field.value)
+                            : field.value || new Date().toISOString()
+                        }
+                        onChange={(datetime) => {
+                          console.log('Selected datetime:', datetime)
+                          field.onChange(datetime.toISOString())
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="attendance_open_from"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Accept attendance from</FormLabel>
+                    <FormControl>
+                      <DatetimePicker
+                        defaultValue={
+                          typeof field.value === "string"
+                            ? new Date(field.value)
+                            : field.value || new Date().toISOString()
+                        }
+                        onChange={(datetime) => {
+                          console.log('Selected datetime:', datetime)
+                          field.onChange(datetime.toISOString())
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="attendance_open_until"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Accept attendance until</FormLabel>
                     <FormControl>
                       <DatetimePicker
                         defaultValue={
