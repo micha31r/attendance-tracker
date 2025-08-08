@@ -32,6 +32,7 @@ import {
 import Link from "next/link"
 import { Organisation } from "@/lib/data/organisation"
 import { CreateOrgSheet } from "./create-org-sheet"
+import { Member } from "@/lib/data/member"
 
 export const columns: ColumnDef<Organisation>[] = [
   {
@@ -42,11 +43,11 @@ export const columns: ColumnDef<Organisation>[] = [
     ),
   },
   {
-    accessorKey: "members",
+    accessorKey: "member_data",
     header: () => <div className="text-muted-foreground">Members</div>,
     cell: ({ row }) => {
-      const members = JSON.parse(row.getValue("members") || "{}")
-      return <div className="font-medium text-muted-foreground">{members.count || 0}</div>
+      const members = (row.getValue("member_data") || []) as Member[]
+      return <div className="font-medium text-muted-foreground">{members.length || 0}</div>
     },
   },
   {
