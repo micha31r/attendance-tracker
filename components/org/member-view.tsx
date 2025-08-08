@@ -37,7 +37,8 @@ export function MemberView({ initialData, onChange, addMemberAction }: { initial
         console.warn("Invalid JSON format or missing required fields");
       }
     })();
-  }, [code, onChange]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code]);
 
   return (
     <Tabs defaultValue="account">

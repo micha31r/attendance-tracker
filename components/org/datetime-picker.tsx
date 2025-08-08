@@ -35,7 +35,8 @@ export function DatetimePicker({ defaultValue, onChange }: DatetimePickerProps) 
       combinedDateTime.setHours(hours, minutes, seconds, 0)
       onChange(combinedDateTime)
     }
-  }, [date, time, onChange])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date, time])
 
   return (
     <div className="flex gap-4">
