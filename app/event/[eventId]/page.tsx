@@ -12,6 +12,8 @@ import {
 import QRCode from "react-qr-code"
 import { ShareLinkButton } from "@/components/event/share-link-button";
 import Link from "next/link";
+import AttendeeTable from "@/components/attendance/attendee-table";
+import { getAttendancePrivateInfoByEventId } from "@/lib/data/attendance";
 
 function buildResponderLink(eventId: string) {
   return `${process.env.NEXT_PUBLIC_DOMAIN}/r/${eventId}`
@@ -32,6 +34,8 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
   }
 
   const responderLink = buildResponderLink(params.eventId);
+
+  const attendancePrivateInfo = await getAttendancePrivateInfoByEventId(params.eventId);
 
   return (
     <main className="max-w-screen-sm mx-auto p-4 space-y-8">
@@ -67,6 +71,15 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
         </CardHeader>
         <CardContent>
           <EventMemberView initialData={(event.attendee_data || []) as Member[]} eventId={event.id} />
+        </CardContent>
+      </Card>
+
+       <Card>
+        <CardHeader>
+          <CardTitle>Attendance list</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AttendeeTable data={attendancePrivateInfo} />
         </CardContent>
       </Card>
     </main>
