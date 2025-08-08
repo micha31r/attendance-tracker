@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getEventById, getPublicEventInfoById } from "@/lib/data/event";
+import { getPublicEventInfoById } from "@/lib/data/event";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CheckCircle, Text, TimerIcon } from "lucide-react";
 import { AttendanceTabs } from "@/components/r/attendance-tabs";
@@ -9,7 +9,7 @@ import UnmarkPresentButton from "@/components/r/unmark-present-button";
 import { AttendanceCloseAlert } from "@/components/r/attendance-close-alert";
 import UnmarkApologyButton from "@/components/r/unmark-apology-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import AttendeeTable from "@/components/attendance/attendee-table";
+import AttendeeTablePublic from "@/components/attendance/attendee-table-public";
 
 export default async function RecordAttendancePage({ 
   params, 
@@ -103,7 +103,7 @@ export default async function RecordAttendancePage({
             <CardTitle>Attendance list</CardTitle>
           </CardHeader>
           <CardContent>
-            <AttendeeTable data={attendancePublicInfo} />
+            <AttendeeTablePublic data={attendancePublicInfo} />
           </CardContent>
         </Card>
     </main>

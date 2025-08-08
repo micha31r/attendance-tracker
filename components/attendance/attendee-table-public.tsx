@@ -9,38 +9,43 @@ import {
 } from "@/components/ui/table"
 import { AttendancePublicInfo } from "@/lib/data/attendance"
 import AttendanceBlock, { AttendanceStatus, getAttendanceStatus } from "./attendance-block"
+import { DateTimeFormat } from "../datetime-format"
 
-export default function AttendeeTable({ data }: { data: AttendancePublicInfo[]}) {
+export default function AttendeeTablePublic({ data }: { data: AttendancePublicInfo[]}) {
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
-          <TableHead className="text-muted-foreground">Type</TableHead>
-          <TableHead className="flex justify-end items-center text-muted-foreground">
+          <TableHead className="text-muted-foreground">
             <span className="w-24">Status</span>
           </TableHead>
+          <TableHead className="text-muted-foreground">Type</TableHead>
+          <TableHead className="text-muted-foreground">Modified</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {data.map((member, index) => (
           <TableRow key={index}>
             <TableCell className="font-medium">{member.firstName}</TableCell>
-            <TableCell className="font-medium text-muted-foreground">{member.guest ? "Guest" : "Member"}</TableCell>
-            <TableCell className="flex justify-end">
+            <TableCell className="text-muted-foreground">
               <div className="flex gap-2 w-24">
                 <AttendanceBlock status={getAttendanceStatus(member.present, member.apology) as AttendanceStatus} />
-                <span className="text-muted-foreground capitalize">
+                <span className="capitalize">
                   {getAttendanceStatus(member.present, member.apology)}
                 </span>
               </div>
+            </TableCell>
+            <TableCell className="font-medium text-muted-foreground">{member.guest ? "Guest" : "Member"}</TableCell>
+            <TableCell className="font-medium text-muted-foreground">
+              <DateTimeFormat date={member.updated_at} />
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={3}>Total {data.length} rows</TableCell>
+          <TableCell colSpan={4}>Total {data.length} rows</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

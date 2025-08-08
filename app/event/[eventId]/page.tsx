@@ -12,7 +12,7 @@ import {
 import QRCode from "react-qr-code"
 import { ShareLinkButton } from "@/components/event/share-link-button";
 import Link from "next/link";
-import AttendeeTable from "@/components/attendance/attendee-table";
+import AttendeeTablePrivate from "@/components/attendance/attendee-table-private";
 import { getAttendancePrivateInfoByEventId } from "@/lib/data/attendance";
 
 function buildResponderLink(eventId: string) {
@@ -79,7 +79,7 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
           <CardTitle>Attendance list</CardTitle>
         </CardHeader>
         <CardContent>
-          <AttendeeTable data={attendancePrivateInfo} />
+          <AttendeeTablePrivate data={attendancePrivateInfo} />
         </CardContent>
       </Card>
     </main>

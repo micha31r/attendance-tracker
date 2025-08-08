@@ -436,7 +436,7 @@ export async function getAttendancePrivateInfoByEventId(
 
   const { data: attendanceData, error: attendeeError } = await supabase
     .from('attendance')
-    .select('email, guest, present, apology, created_at, updated_at')
+    .select('email, guest, present, apology, apology_message, created_at, updated_at')
     .eq('event_id', eventId)
 
   if (attendeeError) {
@@ -453,6 +453,7 @@ export async function getAttendancePrivateInfoByEventId(
       guest: attendance.guest,
       present: attendance.present,
       apology: attendance.apology,
+      apology_message: attendance.apology_message ?? "",
       created_at: attendance.created_at,
       updated_at: attendance.updated_at,
     }
