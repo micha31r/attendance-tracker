@@ -30,7 +30,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import Link from "next/link"
-import { Team } from "@/lib/data/team"
 import { CreateEventContextData, CreateEventSheet } from "./create-event-sheet"
 import { Event } from "@/lib/data/event"
 import { Member } from "@/lib/data/member"
@@ -145,7 +144,7 @@ export function EventTable({ data, contextData }: { data: Event[], contextData: 
           }
           className="max-w-sm"
         />
-        <CreateEventSheet trigger={<Button variant="outline">Create New</Button>} contextData={{ team_id: contextData.team_id }} />
+        <CreateEventSheet trigger={<Button variant="outline">Create New</Button>} contextData={contextData} />
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>

@@ -28,6 +28,7 @@ import {
 
 import { createEvent } from "@/lib/data/event"
 import { DatetimePicker } from "./datetime-picker"
+import { Member } from "@/lib/data/member"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -54,7 +55,8 @@ const formSchema = z.object({
 })
 
 export type CreateEventContextData = {
-  team_id: string
+  team_id: string,
+  attendee_data: Member[]
 }
 
 export function CreateEventSheet({ trigger, contextData }: { trigger: React.ReactNode, contextData: CreateEventContextData }) {
@@ -82,7 +84,8 @@ export function CreateEventSheet({ trigger, contextData }: { trigger: React.Reac
       values.name, 
       values.event_start, 
       values.attendance_open_from, 
-      values.attendance_open_until
+      values.attendance_open_until,
+      contextData.attendee_data
     )
     if (!data) {
       form.setError("name", {

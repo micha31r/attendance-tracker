@@ -29,7 +29,8 @@ export async function createEvent(
   name: string,
   event_start: string,
   attendance_open_from: string | Date,
-  attendance_open_until: string | Date
+  attendance_open_until: string | Date,
+  attendee_data: Member[]
 ): Promise<Event | null> {
   const supabase = await createClient()
 
@@ -40,7 +41,8 @@ export async function createEvent(
       name, 
       event_start, 
       attendance_open_from, 
-      attendance_open_until 
+      attendance_open_until,
+      attendee_data
     })
     .select()
     .single()
