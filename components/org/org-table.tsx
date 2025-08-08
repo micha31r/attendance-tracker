@@ -33,6 +33,7 @@ import Link from "next/link"
 import { Organisation } from "@/lib/data/organisation"
 import { CreateOrgSheet } from "./create-org-sheet"
 import { Member } from "@/lib/data/member"
+import { DeleteOrgDialog } from "./delete-org-dialog"
 
 export const columns: ColumnDef<Organisation>[] = [
   {
@@ -85,7 +86,7 @@ export const columns: ColumnDef<Organisation>[] = [
                 <Link href={`/org/${organisation.id}`}>Manage organisation</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Delete all data</DropdownMenuItem>
+               <DeleteOrgDialog id={organisation.id} trigger={<Button variant="ghost" className="w-full justify-start rounded-sm px-2 py-1.5 text-sm text-destructive!">Delete organisation</Button>} />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

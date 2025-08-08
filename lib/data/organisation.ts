@@ -85,3 +85,63 @@ export async function updateOrgMemberData(
 
   return data
 }
+
+export async function deleteOrganisation(orgId: string): Promise<boolean> {
+  const supabase = await createClient()
+
+  // Get all events associated with the organisation
+  const { data: events, error: fetchEventsError } = await supabase
+    .from('event')
+    .select('id, team!inner(id, organisation_id)')
+    .eq('team.organisation_id', orgId)
+
+  if (fetchEventsError) {
+    console.error('Error fetching events for organisation:', fetchEventsError)
+    return false
+  }
+
+  // Delete attendance records for the events
+  const { error: attendanceError } = await supabase
+    .from('attendance')
+    .delete()
+    .in('event_id', events.map(event => event.id))
+
+  if (attendanceError) {
+    console.error('Error deleting attendance for events:', attendanceError)
+    return false
+  }
+
+  // Delete the events
+  const { error: eventError } = await supabase
+    .from('event')
+    .delete()
+    .in('id', events.map(event => event.id))
+
+  if (eventError) {
+    console.error('Error deleting events:', eventError)
+    return false
+  }
+
+  // Delete the teams
+  const { error: teamError } = await supabase
+    .from('team')
+    .delete()
+    .eq('organisation_id', orgId)
+
+  if (teamError) {
+    console.error('Error deleting teams:', teamError)
+    return false
+  }
+
+  const { error } = await supabase
+    .from('organisation')
+    .delete()
+    .eq('id', orgId)
+
+  if (error) {
+    console.error('Error deleting organisation:', error)
+    return false
+  }
+
+  return true
+}
