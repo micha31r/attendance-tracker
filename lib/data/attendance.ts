@@ -413,7 +413,7 @@ export async function getAttendancePublicInfoByEventId(
       created_at: attendance.created_at,
       updated_at: attendance.updated_at,
     }
-  })
+  }).sort((a, b) => a.firstName.localeCompare(b.firstName));
 
   return attendancePublicInfo
 }
@@ -456,7 +456,7 @@ export async function getAttendancePrivateInfoByEventId(
       created_at: attendance.created_at,
       updated_at: attendance.updated_at,
     }
-  })
+  }).sort((a, b) => (a.firstName + a.lastName).localeCompare(b.firstName + b.lastName));
 
   return attendancePrivateInfo
 }
