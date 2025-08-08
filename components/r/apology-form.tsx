@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { useState } from "react"
-import { markApology } from "@/lib/data/attendance"
+import { markApology, markApologyAnon } from "@/lib/data/attendance"
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 import { Textarea } from "../ui/textarea"
 
@@ -29,7 +29,7 @@ const formSchema = z.object({
   }),
 })
 
-export function ApologyForm({ eventId, email }: { eventId: string, email?: string }) {
+export function ApologyForm({ eventId, email, isAuthenticated }: { eventId: string, email?: string, isAuthenticated: boolean }) {
   const [disabled, setDisabled] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -40,10 +40,12 @@ export function ApologyForm({ eventId, email }: { eventId: string, email?: strin
     },
   })
 
+  const dataFunction = isAuthenticated ? markApology : markApologyAnon
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setDisabled(true)
 
-    const data = await markApology(eventId, values.email, values.apology)
+    const data = await dataFunction(eventId, values.email, values.apology)
     if (!data) {
       form.setError("root", {
         type: "manual",

@@ -1,15 +1,17 @@
 "use client";
-import { unmarkApology } from "@/lib/data/attendance";
+import { unmarkApology, unmarkApologyAnon } from "@/lib/data/attendance";
 import { Button } from "../ui/button";
 import { useState } from "react";
 
-export default function UnmarkApologyButton({ eventId, email }: { eventId: string, email: string }) {
+export default function UnmarkApologyButton({ eventId, email, isAuthenticated }: { eventId: string, email: string, isAuthenticated: boolean }) {
   const [disabled, setDisabled] = useState(false);
+
+  const dataFunction = isAuthenticated ? unmarkApology : unmarkApologyAnon
 
   async function handleClick() {
     setDisabled(true);
 
-    const data = await unmarkApology(eventId, email);
+    const data = await dataFunction(eventId, email);
     if (!data) {
       console.error("Failed to unmark apology");
       setDisabled(false);

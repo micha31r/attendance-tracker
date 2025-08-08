@@ -1,5 +1,6 @@
 "use server"
 import { createClient } from "../supabase/server"
+import { dangerCreateServerRoleClient } from "../supabase/server-role"
 import { createAttendance, deleteAttendance } from "./attendance"
 import { Member, removeDuplicateMembers } from "./member"
 
@@ -10,6 +11,15 @@ export type Event = {
   attendance_open_from: string | Date,
   attendance_open_until: string | Date,
   attendee_data?: Member[] | null,
+  event_start: string | Date,
+  created_at: string | Date
+}
+
+export type EventPublicInfo = {
+  id: string
+  name: string,
+  attendance_open_from: string | Date,
+  attendance_open_until: string | Date,
   event_start: string | Date,
   created_at: string | Date
 }
@@ -134,4 +144,28 @@ export async function updateEventAttendeeData(
   }
 
   return eventData
+}
+
+export async function getPublicEventInfoById(id: string): Promise<EventPublicInfo | null> {
+  const supabase = await dangerCreateServerRoleClient()
+
+  const { data, error } = await supabase
+    .from('event')
+    .select('id, name, event_start, attendance_open_from, attendance_open_until, created_at')
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    console.error('Error fetching public event info:', error)
+    return null
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    event_start: data.event_start,
+    attendance_open_from: data.attendance_open_from,
+    attendance_open_until: data.attendance_open_until,
+    created_at: data.created_at
+  }
 }

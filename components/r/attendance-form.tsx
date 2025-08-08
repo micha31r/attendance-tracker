@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { useState } from "react"
-import { markPresent } from "@/lib/data/attendance"
+import { markPresent, markPresentAnon } from "@/lib/data/attendance"
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 
 const formSchema = z.object({
@@ -23,7 +23,7 @@ const formSchema = z.object({
   }),
 })
 
-export function AttendanceForm({ eventId, email }: { eventId: string, email?: string }) {
+export function AttendanceForm({ eventId, email, isAuthenticated }: { eventId: string, email?: string, isAuthenticated: boolean }) {
   const [disabled, setDisabled] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -33,10 +33,12 @@ export function AttendanceForm({ eventId, email }: { eventId: string, email?: st
     },
   })
 
+  const dataFunction = isAuthenticated ? markPresent : markPresentAnon
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setDisabled(true)
 
-    const data = await markPresent(eventId, values.email)
+    const data = await dataFunction(eventId, values.email)
     if (!data) {
       form.setError("root", {
         type: "manual",

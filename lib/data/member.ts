@@ -63,26 +63,25 @@ export function removeDuplicateMembers(members: Member[]): Member[] {
 }
 
 // Example member data for testing
-
-// const memberData = [
-//   {
-//     "firstName": "John",
-//     "lastName": "Doe",
-//     "email": "john.doe@example.com"
-//   },
-//   {
-//     "firstName": "Jane",
-//     "lastName": "Smith",
-//     "email": "jane.smith@example.com"
-//   },
-//   {
-//     "firstName": "Alice",
-//     "lastName": "Johnson",
-//     "email": "alice.johnson@example.com"
-//   },
-//   {
-//     "firstName": "Michael",
-//     "lastName": "Ren",
-//     "email": "michael.ren@example.com"
-//   }
-// ]
+export const testMemberData: Member[] = [
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com"
+  },
+  {
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@example.com"
+  },
+  {
+    "firstName": "Alice",
+    "lastName": "Johnson",
+    "email": "alice.johnson@example.com"
+  },
+  {
+    "firstName": "Michael",
+    "lastName": "Ren",
+    "email": "michael.ren@example.com"
+  }
+]

@@ -1,13 +1,15 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getEventById } from "@/lib/data/event";
+import { getEventById, getPublicEventInfoById } from "@/lib/data/event";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CheckCircle, Text, TimerIcon } from "lucide-react";
 import { AttendanceTabs } from "@/components/r/attendance-tabs";
-import { getAttendanceByEventIdAndEmail } from "@/lib/data/attendance";
+import { getAttendanceByEventIdAndEmail, getAttendanceByEventIdAndEmailAnon, getAttendancePublicInfoByEventId } from "@/lib/data/attendance";
 import UnmarkPresentButton from "@/components/r/unmark-present-button";
 import { AttendanceCloseAlert } from "@/components/r/attendance-close-alert";
 import UnmarkApologyButton from "@/components/r/unmark-apology-button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AttendeeTable from "@/components/attendance/attendee-table";
 
 export default async function RecordAttendancePage({ 
   params, 
@@ -17,22 +19,29 @@ export default async function RecordAttendancePage({
   searchParams: { email?: string }
 }) {
   const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
+  const { data, error } = await supabase.auth.getClaims();
+  const isAuthenticated = Boolean(!error && data?.claims);
   const email = data?.claims.email || searchParams.email || null;
 
+  const attendanceDataFunction = isAuthenticated 
+    ? getAttendanceByEventIdAndEmail 
+    : getAttendanceByEventIdAndEmailAnon;
+
   const attendance = email
-    ? await getAttendanceByEventIdAndEmail(params.eventId, email) 
+    ? await attendanceDataFunction(params.eventId, email) 
     : null;
 
   const isAttendanceRecorded = Boolean(attendance?.present || attendance?.apology);
 
-  const event = await getEventById(params.eventId);
+  const event = await getPublicEventInfoById(params.eventId);
   if (!event) {
     console.error("Event not found, redirecting to /org");
     redirect("/org");
   }
 
   const acceptAttendance = Boolean(event.attendance_open_from && event.attendance_open_until && new Date(event.attendance_open_from) < new Date() && new Date(event.attendance_open_until) > new Date());
+
+  const attendancePublicInfo = await getAttendancePublicInfoByEventId(params.eventId);
 
   return (
     <main className="max-w-screen-sm mx-auto p-4 space-y-8">
@@ -54,12 +63,12 @@ export default async function RecordAttendancePage({
 
                   {/* Can only unmark present when event is accepting attendance */}
                   {acceptAttendance && attendance?.present && (
-                    <UnmarkPresentButton eventId={params.eventId} email={email} />
+                    <UnmarkPresentButton eventId={params.eventId} email={email} isAuthenticated={isAuthenticated} />
                   )}
 
                   {/* Apology can be withdrawn anytime */}
                   {attendance?.apology && (
-                    <UnmarkApologyButton eventId={params.eventId} email={email} />
+                    <UnmarkApologyButton eventId={params.eventId} email={email} isAuthenticated={isAuthenticated} />
                   )}
                 </AlertDescription>
               </Alert>
@@ -86,8 +95,17 @@ export default async function RecordAttendancePage({
         </div>
 
         {!isAttendanceRecorded && (
-          <AttendanceTabs acceptAttendance={acceptAttendance} eventId={params.eventId} email={email} />
+          <AttendanceTabs acceptAttendance={acceptAttendance} eventId={params.eventId} email={email} isAuthenticated={isAuthenticated} />
         )}
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Attendance list</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AttendeeTable data={attendancePublicInfo} />
+          </CardContent>
+        </Card>
     </main>
   );
 }

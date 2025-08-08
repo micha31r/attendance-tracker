@@ -1,15 +1,17 @@
 "use client";
-import { unmarkPresent } from "@/lib/data/attendance";
+import { unmarkPresent, unmmarkPresentAnon } from "@/lib/data/attendance";
 import { Button } from "../ui/button";
 import { useState } from "react";
 
-export default function UnmarkPresentButton({ eventId, email }: { eventId: string, email: string }) {
+export default function UnmarkPresentButton({ eventId, email, isAuthenticated }: { eventId: string, email: string, isAuthenticated: boolean }) {
   const [disabled, setDisabled] = useState(false);
+
+  const dataFunction = isAuthenticated ? unmarkPresent : unmmarkPresentAnon
 
   async function handleClick() {
     setDisabled(true);
 
-    const data = await unmarkPresent(eventId, email);
+    const data = await dataFunction(eventId, email);
     if (!data) {
       console.error("Failed to unmark attendance");
       setDisabled(false);

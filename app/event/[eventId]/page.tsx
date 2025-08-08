@@ -60,20 +60,15 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
           </CardContent>
         </Card>
       </div>
-      <div className="space-y-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Expected Attendees</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <EventMemberView initialData={(event.attendee_data || []) as Member[]} eventId={event.id} />
-          </CardContent>
-        </Card>
-      </div>
-      <div className="space-y-4">
-        <h1 className="text-2xl font-semibold">Attendance</h1>
-        <div className="min-h-96"></div>
-      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Expected Attendees</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <EventMemberView initialData={(event.attendee_data || []) as Member[]} eventId={event.id} />
+        </CardContent>
+      </Card>
     </main>
   );
 }

@@ -16,7 +16,17 @@ import {
 import { AttendanceForm } from "./attendance-form"
 import { ApologyForm } from "./apology-form"
 
-export function AttendanceTabs({ acceptAttendance, eventId, email }: { acceptAttendance: boolean, eventId: string, email?: string }) {
+export function AttendanceTabs({ 
+  acceptAttendance, 
+  eventId, 
+  email, 
+  isAuthenticated 
+}: { 
+  acceptAttendance: boolean, 
+  eventId: string, 
+  email?: string, 
+  isAuthenticated: boolean 
+}) {
   return (
     <div className="flex w-full flex-col gap-6">
       <Tabs defaultValue={acceptAttendance ? "attendance" : "apology"}>
@@ -34,7 +44,7 @@ export function AttendanceTabs({ acceptAttendance, eventId, email }: { acceptAtt
                 <CardDescription>Confirm your email to continue.</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-6">
-                <AttendanceForm eventId={eventId} email={email} />
+                <AttendanceForm eventId={eventId} email={email} isAuthenticated={isAuthenticated} />
               </CardContent>
             </Card>
           </TabsContent>
@@ -46,7 +56,7 @@ export function AttendanceTabs({ acceptAttendance, eventId, email }: { acceptAtt
               <CardDescription>Confirm your email and add a reason to continue.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
-              <ApologyForm eventId={eventId} email={email} />
+              <ApologyForm eventId={eventId} email={email} isAuthenticated={isAuthenticated} />
             </CardContent>
           </Card>
         </TabsContent>
