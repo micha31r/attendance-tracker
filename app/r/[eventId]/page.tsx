@@ -47,7 +47,7 @@ export default async function RecordAttendancePage({
   return (
     <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
       <div className="space-y-1">
-        <h3 className="text-primary">Event check-in</h3>
+        <h3 className="text-primary">Event</h3>
         <h1 className="text-4xl font-semibold">{event.name}</h1>
       </div>
 

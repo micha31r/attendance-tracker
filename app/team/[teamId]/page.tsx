@@ -70,7 +70,7 @@ export default async function TeamDetailPage({ params }: { params: { orgId: stri
   return (
     <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
       <div className="space-y-1">
-        <h3 className="text-primary">Team admin</h3>
+        <h3 className="text-primary">Team</h3>
         <h1 className="text-4xl font-semibold">{team.name}</h1>
         <Button variant="secondary" size="sm" className="mt-1" asChild>
           <Link href={`/org/${team.organisation_id}`}>
