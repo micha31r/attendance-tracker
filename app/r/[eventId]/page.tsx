@@ -43,22 +43,27 @@ export default async function RecordAttendancePage({
             <>
               <Alert className="bg-primary border-0 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]">
                 <CheckCircle className="stroke-white"/>
-                <AlertDescription className="flex gap-2 sm:gap-4 flex-col sm:flex-row">
+                <AlertDescription className="flex gap-2 sm:gap-4 flex-col sm:flex-row justify-between">
                   <div>
                     <p className="text-white font-semibold">{attendance?.present ? "You are marked as present." : "You have sent an apology."}</p>
-                    {acceptAttendance && (
-                      <p className="text-white/80">You can change your attendance status until the host closes check-in for this event.</p>
-                    )}
+                    <p className="text-white/80">
+                      {acceptAttendance && attendance?.present && "You can change your attendance status until the host closes check-in for this event."}
+                      {attendance?.apology && "You can withdraw your apology anytime."}
+                    </p>
                   </div>
-                  {acceptAttendance && (
-                    attendance?.present ? (
-                      <UnmarkPresentButton eventId={params.eventId} email={email} />
-                    ) : (
-                      <UnmarkApologyButton eventId={params.eventId} email={email} />
-                    )
+
+                  {/* Can only unmark present when event is accepting attendance */}
+                  {acceptAttendance && attendance?.present && (
+                    <UnmarkPresentButton eventId={params.eventId} email={email} />
+                  )}
+
+                  {/* Apology can be withdrawn anytime */}
+                  {attendance?.apology && (
+                    <UnmarkApologyButton eventId={params.eventId} email={email} />
                   )}
                 </AlertDescription>
               </Alert>
+
               {attendance?.apology && (
                 <Alert variant={"default"}>
                   <Text />
