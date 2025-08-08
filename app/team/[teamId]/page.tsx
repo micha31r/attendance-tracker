@@ -8,6 +8,7 @@ import { Member } from "@/lib/data/member";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -88,6 +89,7 @@ export default async function TeamDetailPage({ params }: { params: { orgId: stri
       <Card>
         <CardHeader>
           <CardTitle>Attendance streak</CardTitle>
+          <CardDescription>Streak is ordered from the most recent event (on the left) to the oldest.</CardDescription>
         </CardHeader>
         <CardContent className="px-0">
           <div className="px-6 overflow-x-scroll">
