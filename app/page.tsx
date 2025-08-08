@@ -15,7 +15,7 @@ export default function Home() {
           Import users and set up teams in seconds. Collect attendance securely with a single, verified link.
         </p>
         <div className="flex gap-4 justify-center">
-          <Button asChild className="p-8 py-6 rounded-full font-semibold text-md">
+          <Button asChild className="p-8 py-6 rounded-full font-semibold text-md shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)]">
             <Link href="/auth/login">Get started for free</Link>
           </Button>
         </div>
