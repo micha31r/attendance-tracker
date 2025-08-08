@@ -221,6 +221,7 @@ export default function HalfToneGradient({
     return () => {
       observer.disconnect();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gridSpacing, dotSize, getForegroundColor]);
   
   const handleMouseMove = useCallback((event: MouseEvent) => {
@@ -268,6 +269,7 @@ export default function HalfToneGradient({
       speed: clampedSpeed,
       initialized: true
     };
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trailSize]);
   
   // Sigmoid contrast function for enhanced noise mapping
@@ -345,6 +347,7 @@ export default function HalfToneGradient({
     }
     
     animationIdRef.current = requestAnimationFrame(animate);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [noiseScale, noiseSpeed, trailSize]);
   
   const handleResize = useCallback(() => {

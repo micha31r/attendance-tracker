@@ -86,7 +86,7 @@ export function MemberTableSelectable({ data, onChange }: { data: Member[]; onCh
     const selectedMembers = selectedRows.map(rowIndex => data[parseInt(rowIndex)])
     console.log('Selected members:', selectedMembers)
     onChange?.(selectedMembers)
-  }, [rowSelection])
+  }, [rowSelection, data, onChange])
 
   const table = useReactTable({
     data,

@@ -94,7 +94,7 @@ export function AddOrgMemberSheet({ trigger }: { trigger: React.ReactNode }) {
 
       setOrganisation(org)
     })()
-  }, [])
+  }, [orgId, router])
   
   if (!organisation) {
     return null

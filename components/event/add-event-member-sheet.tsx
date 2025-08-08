@@ -64,7 +64,7 @@ export function AddEventMemberSheet({ trigger }: { trigger: React.ReactNode }) {
       setEvent(event)
       setOrganisation(org)
     })()
-  }, [])
+  }, [eventId, router])
   
   // Get members that can be added to the team
   function getCanAddMembers() {

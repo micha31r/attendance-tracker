@@ -99,7 +99,7 @@ export function AddEventGuestSheet({ trigger }: { trigger: React.ReactNode }) {
 
       setEvent(event)
     })()
-  }, [])
+  }, [eventId, router])
 
   if (!event) {
     return null

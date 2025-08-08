@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -54,7 +53,7 @@ export function AddTeamMemberSheet({ trigger }: { trigger: React.ReactNode }) {
       setTeam(team)
       setOrganisation(org)
     })()
-  }, [])
+  }, [teamId, router])
   
   // Get members that can be added to the team
   function getCanAddMembers() {

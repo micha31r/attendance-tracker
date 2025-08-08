@@ -37,7 +37,7 @@ export function MemberView({ initialData, onChange, addMemberAction }: { initial
         console.warn("Invalid JSON format or missing required fields");
       }
     })();
-  }, [code]);
+  }, [code, onChange]);
 
   return (
     <Tabs defaultValue="account">

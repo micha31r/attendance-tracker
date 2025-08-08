@@ -136,7 +136,7 @@ export function MemberTable({ data, addMemberAction, onChange }: { data: Member[
     const selectedMembers = selectedRows.map(rowIndex => data[parseInt(rowIndex)])
     setSelectedMembers(selectedMembers)
     console.log('Selected members:', selectedMembers)
-  }, [rowSelection])
+  }, [rowSelection, data])
 
   const table = useReactTable({
     data,

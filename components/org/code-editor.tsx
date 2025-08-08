@@ -37,6 +37,7 @@ export function CodeEditor({
       const currentTheme = getThemeString();
       setThemeString(currentTheme);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme, mounted]);
 
   useEffect(() => {
