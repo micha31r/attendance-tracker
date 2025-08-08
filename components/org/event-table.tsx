@@ -193,7 +193,7 @@ export function EventTable({ data, contextData }: { data: Event[], contextData: 
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 pt-4">
         <div className="text-muted-foreground flex-1 text-sm">
           Total {table.getFilteredRowModel().rows.length} row(s)
         </div>

@@ -106,7 +106,7 @@ export async function getEventsByOrganisationId(organisationId: string): Promise
 
   const { data, error } = await supabase
     .from('event')
-    .select()
+    .select(`*, team!inner(organisation_id)`)
     .eq('team.organisation_id', organisationId)
     .order('event_start', { ascending: false })
 

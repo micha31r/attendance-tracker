@@ -105,7 +105,7 @@ export function TeamTable({ data, contextData }: { data: Team[], contextData: Cr
 
   return (
     <div className="w-full">
-      <div className="flex items-center gap-4 justify-between py-4">
+      <div className="flex items-center gap-4 justify-between pb-4">
         <Input
           placeholder="Filter team names..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -163,7 +163,7 @@ export function TeamTable({ data, contextData }: { data: Team[], contextData: Cr
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 pt-4">
         <div className="text-muted-foreground flex-1 text-sm">
           Total {table.getFilteredRowModel().rows.length} row(s)
         </div>

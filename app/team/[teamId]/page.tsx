@@ -71,6 +71,7 @@ export default async function TeamDetailPage({ params }: { params: { orgId: stri
       <Card>
         <CardHeader>
           <CardTitle>Events</CardTitle>
+          <CardDescription>Manage events in the team.</CardDescription>
         </CardHeader>
         <CardContent>
           <EventTable data={allEvents} contextData={{ team_id: team.id, attendee_data: team.default_attendee_data || [] }} />
@@ -79,7 +80,8 @@ export default async function TeamDetailPage({ params }: { params: { orgId: stri
 
       <Card>
         <CardHeader>
-          <CardTitle>Team members</CardTitle>
+          <CardTitle>Members</CardTitle>
+          <CardDescription>Manage members in the team.</CardDescription>
         </CardHeader>
         <CardContent>
           <TeamMemberView initialData={(team.default_attendee_data || []) as Member[]} teamId={team.id} />
