@@ -87,7 +87,7 @@ export default async function TeamDetailPage({ params }: { params: { orgId: stri
 
       <Card>
         <CardHeader>
-          <CardTitle>Attendance graph</CardTitle>
+          <CardTitle>Attendance streak</CardTitle>
         </CardHeader>
         <CardContent className="px-0">
           <div className="px-6 overflow-x-scroll">
