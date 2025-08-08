@@ -48,7 +48,7 @@ export function MemberView({ initialData, onChange, addMemberAction }: { initial
       <TabsContent value="account">
         <MemberTable data={data} addMemberAction={addMemberAction} onChange={(data) => setCode(JSON.stringify(data, null, 4))} />
       </TabsContent>
-      <TabsContent value="password" className="space-y-2">
+      <TabsContent value="password" className="space-y-4 mt-4">
         <Alert variant="default" className="bg-secondary">
           <AlertTitle>Import data</AlertTitle>
           <AlertDescription>

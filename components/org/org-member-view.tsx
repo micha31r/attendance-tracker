@@ -35,7 +35,7 @@ export default function OrgMemberView({ initialData, orgId }: { initialData: Mem
     <div>
       <MemberView initialData={initialData} onChange={onChange} addMemberAction={<AddOrgMemberSheet trigger={<Button variant="outline">Add members</Button>} />} />
       {showSaveButton && (
-        <div className="flex gap-2 mt-2">
+        <div className="flex gap-2 mt-4">
           <Button className="flex-1" variant="outline" onClick={() => window.location.reload()}>Discard changes</Button>
           <Button className="flex-1" variant="default" onClick={onSubmit}>Save changes</Button>
         </div>
