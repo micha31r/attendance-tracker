@@ -64,7 +64,8 @@ export function AddEventMemberSheet({ trigger }: { trigger: React.ReactNode }) {
       setEvent(event)
       setOrganisation(org)
     })()
-  }, [eventId, router])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router])
   
   // Get members that can be added to the team
   function getCanAddMembers() {
