@@ -33,6 +33,7 @@ import Link from "next/link"
 import { Team } from "@/lib/data/team"
 import { CreateTeamContextData, CreateTeamSheet } from "./create-team-sheet"
 import { Member } from "@/lib/data/member"
+import { DeleteTeamDialog } from "../team/delete-team-dialog"
 
 export const columns: ColumnDef<Team>[] = [
   {
@@ -85,7 +86,7 @@ export const columns: ColumnDef<Team>[] = [
                 <Link href={`/team/${team.id}`}>Manage team</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Delete team</DropdownMenuItem>
+              <DeleteTeamDialog name={team.name} id={team.id} trigger={<Button variant="ghost" className="w-full justify-start rounded-sm px-2 py-1.5 text-sm text-destructive!">Delete team</Button>} />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

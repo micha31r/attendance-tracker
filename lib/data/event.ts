@@ -34,7 +34,7 @@ export async function createEvent(
 ): Promise<Event | null> {
   const supabase = await createClient()
 
-  const { data, error } = await supabase
+  const { data: initialData, error } = await supabase
     .from('event')
     .insert({ 
       team_id, 
@@ -42,13 +42,21 @@ export async function createEvent(
       event_start, 
       attendance_open_from, 
       attendance_open_until,
-      attendee_data
+      attendee_data: []
     })
     .select()
     .single()
 
   if (error) {
     console.error('Error creating event:', error)
+    return null
+  }
+
+  console.log('Event created:', initialData.id)
+  const data = await updateEventAttendeeData(initialData.id, attendee_data)
+
+  if (!data) {
+    console.error('Error updating event attendee data when creating event')
     return null
   }
 
