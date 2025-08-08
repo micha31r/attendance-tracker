@@ -34,6 +34,7 @@ import { Team } from "@/lib/data/team"
 import { CreateEventContextData, CreateEventSheet } from "./create-event-sheet"
 import { Event } from "@/lib/data/event"
 import { Member } from "@/lib/data/member"
+import { DateFormat, DateTimeFormat } from "../datetime-format"
 
 export const columns: ColumnDef<Event>[] = [
   {
@@ -45,47 +46,53 @@ export const columns: ColumnDef<Event>[] = [
   },
   {
     accessorKey: "attendee_data",
-    header: () => <div className="text-muted-foreground">Attendees</div>,
+    header: () => <div>Attendees</div>,
     cell: ({ row }) => {
       const attendees = (row.getValue("attendee_data") || []) as Member[]
-      return <div className="font-medium text-muted-foreground">{attendees.length || 0}</div>
+      return <div>{attendees.length || 0}</div>
+    },
+  },
+  {
+    accessorKey: "attendance_open_from",
+    header: () => <div>Accepting responses</div>,
+    cell: ({ row }) => {
+      const from = row.getValue("attendance_open_from") as string
+      const until = row.original.attendance_open_until as string
+
+      if (from && until) {
+        const fromDate = new Date(from as string)
+        const untilDate = new Date(until as string)
+        const now = new Date()
+
+        if (fromDate < now && untilDate > now) {
+          return <div className="text-primary font-medium">Open until <DateTimeFormat date={until} connective=" / " /></div>
+        }
+      }
+
+      return <div className="text-muted-foreground">Closed</div>
     },
   },
   {
     accessorKey: "event_start",
-    header: () => <div className="text-muted-foreground">Event start</div>,
+    header: () => <div>Event start</div>,
     cell: ({ row }) => {
-      const eventStart = row.getValue("event_start") as string
-      const date = new Date(eventStart)
-      const formattedDate = date.toLocaleDateString("en-AU", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
-      const formattedTime = date.toLocaleTimeString("en-AU", {
-        hour: "numeric",
-        minute: "2-digit",
-      })
       return (
-        <div className="font-medium text-muted-foreground">
-          <div>{formattedDate}</div>
-          <div className="text-sm">{formattedTime}</div>
-        </div>
+        <DateTimeFormat
+          date={row.getValue("event_start") as string}
+          connective=" / "
+        />
       )
     },
   },
   {
     accessorKey: "created_at",
-    header: () => <div className="text-muted-foreground">Created</div>,
+    header: () => <div>Created</div>,
     cell: ({ row }) => {
-      const createdAt = row.getValue("created_at") as string
-      const date = new Date(createdAt)
-      const formattedDate = date.toLocaleDateString("en-AU", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
-      return <div className="font-medium text-muted-foreground">{formattedDate}</div>
+      return (
+        <DateFormat
+          date={row.getValue("created_at") as string}
+        />
+      )
     },
   },
   {
@@ -129,7 +136,7 @@ export function EventTable({ data, contextData }: { data: Event[], contextData: 
 
   return (
     <div className="w-full">
-      <div className="flex items-center gap-4 justify-between py-4">
+      <div className="flex items-center gap-4 justify-between pb-4">
         <Input
           placeholder="Filter event names..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
