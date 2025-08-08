@@ -18,20 +18,20 @@ export default function AttendeeTablePrivate({ data }: { data: AttendancePrivate
       <TableHeader>
         <TableRow>
           <TableHead>Full name</TableHead>
-          <TableHead className="text-muted-foreground">
+          <TableHead>
             <span className="w-24">Status</span>
           </TableHead>
-          <TableHead className="text-muted-foreground">Email</TableHead>
-          <TableHead className="text-muted-foreground">Type</TableHead>
-          <TableHead className="text-muted-foreground">Modified</TableHead>
-          <TableHead className="text-muted-foreground">Apology message</TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Type</TableHead>
+          <TableHead>Modified</TableHead>
+          <TableHead>Apology message</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {data.map((member, index) => (
           <TableRow key={index}>
             <TableCell className="font-medium">{member.firstName} {member.lastName}</TableCell>
-            <TableCell className="text-muted-foreground">
+            <TableCell>
               <div className="flex gap-2 w-24">
                 <AttendanceBlock status={getAttendanceStatus(member.present, member.apology) as AttendanceStatus} />
                 <span className="capitalize">
@@ -43,11 +43,11 @@ export default function AttendeeTablePrivate({ data }: { data: AttendancePrivate
               <span>{member.email}</span>
               <CopyButton className="h-max p-1 px-1.5 text-xs text-muted-foreground" text={member.email} />
             </TableCell>
-            <TableCell className="font-medium text-muted-foreground">{member.guest ? "Guest" : "Member"}</TableCell>
-            <TableCell className="font-medium text-muted-foreground">
+            <TableCell className="font-medium">{member.guest ? "Guest" : "Member"}</TableCell>
+            <TableCell className="font-medium">
               <DateTimeFormat date={member.updated_at} />
             </TableCell>
-            <TableCell className="font-medium text-muted-foreground">{member.apology_message}</TableCell>
+            <TableCell className={`font-medium ${!member.apology ? "text-muted-foreground" : ""}`}>{member.apology ? member.apology_message : "-"}</TableCell>
           </TableRow>
         ))}
       </TableBody>
