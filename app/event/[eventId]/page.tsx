@@ -20,7 +20,7 @@ import { DateTimeFormat } from "@/components/datetime-format";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { UpdateEventSheet } from "@/components/event/edit-event-sheet";
 import { Button } from "@/components/ui/button";
-import { Hourglass, LinkIcon } from "lucide-react";
+import { ArrowLeft, Hourglass, LinkIcon } from "lucide-react";
 
 function buildResponderLink(eventId: string) {
   return `${process.env.NEXT_PUBLIC_DOMAIN}/r/${eventId}`
@@ -48,7 +48,16 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
 
   return (
     <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
-      <h1 className="text-4xl font-semibold">{event.name}</h1>
+      <div className="space-y-1">
+        <h3 className="text-primary">Event admin</h3>
+        <h1 className="text-4xl font-semibold">{event.name}</h1>
+        <Button variant="secondary" size="sm" className="mt-1" asChild>
+          <Link href={`/team/${event.team_id}`}>
+            <ArrowLeft />
+            Team admin
+          </Link>
+        </Button>
+      </div>
       
       <Card>
         <CardContent>
