@@ -30,8 +30,31 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Member } from "@/lib/data/member"
+import { Checkbox } from "../ui/checkbox"
 
 export const columns: ColumnDef<Member>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "firstName",
     header: "First Name",
@@ -76,14 +99,13 @@ export const columns: ColumnDef<Member>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel className="font-semibold">Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(member.email)}
               >
                 Copy email
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Remove</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -92,8 +114,29 @@ export const columns: ColumnDef<Member>[] = [
   },
 ]
 
-export function MemberTable({ data, addMemberAction }: { data: Member[], addMemberAction?: React.ReactNode }) {
+export function MemberTable({ data, addMemberAction, onChange }: { data: Member[], addMemberAction?: React.ReactNode, onChange?: (data: Member[]) => void }) {
   const [globalFilter, setGlobalFilter] = React.useState("")
+  const [rowSelection, setRowSelection] = React.useState({})
+  const [selectedMembers, setSelectedMembers] = React.useState<Member[]>([])
+
+  function getUnselectedMembers(selectedMembers: Member[]) {
+    const selectedEmails = new Set(selectedMembers.map(member => member.email))
+    return data.filter(member => !selectedEmails.has(member.email))
+  }
+
+  function onDeleteAction() {
+    const unselectedMembers = getUnselectedMembers(selectedMembers)
+    onChange?.(unselectedMembers)
+    setRowSelection({})
+    setSelectedMembers([])
+  }
+
+  React.useEffect(() => {
+    const selectedRows = Object.keys(rowSelection).filter(key => data[key])
+    const selectedMembers = selectedRows.map(rowIndex => data[parseInt(rowIndex)])
+    setSelectedMembers(selectedMembers)
+    console.log('Selected members:', selectedMembers)
+  }, [rowSelection])
 
   const table = useReactTable({
     data,
@@ -101,8 +144,10 @@ export function MemberTable({ data, addMemberAction }: { data: Member[], addMemb
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
     state: {
       globalFilter,
+      rowSelection,
     },
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: (row, columnId, filterValue) => {
@@ -124,7 +169,9 @@ export function MemberTable({ data, addMemberAction }: { data: Member[], addMemb
           onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
-        {addMemberAction}
+        {selectedMembers.length > 0 ? (
+          <Button variant={"secondary"} className="text-destructive" onClick={onDeleteAction}>Delete rows</Button>
+        ) : addMemberAction}
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -175,7 +222,8 @@ export function MemberTable({ data, addMemberAction }: { data: Member[], addMemb
       </div>
       <div className="flex items-center justify-end space-x-2 pt-4">
         <div className="text-muted-foreground flex-1 text-sm">
-          Total {table.getFilteredRowModel().rows.length} row(s)
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <div className="space-x-2">
           <Button

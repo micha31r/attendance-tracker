@@ -46,7 +46,7 @@ export function MemberView({ initialData, onChange, addMemberAction }: { initial
         <TabsTrigger value="password">Raw data (JSON)</TabsTrigger>
       </TabsList>
       <TabsContent value="account">
-        <MemberTable data={data} addMemberAction={addMemberAction} />
+        <MemberTable data={data} addMemberAction={addMemberAction} onChange={(data) => setCode(JSON.stringify(data, null, 4))} />
       </TabsContent>
       <TabsContent value="password" className="space-y-2">
         <Alert variant="default" className="bg-secondary">
