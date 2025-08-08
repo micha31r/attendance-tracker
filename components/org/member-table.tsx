@@ -47,6 +47,13 @@ export const columns: ColumnDef<Member>[] = [
     ),
   },
   {
+    accessorKey: "guest",
+    header: "Type",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("guest") ? "Guest" : "Member"}</div>
+    ),
+  },
+  {
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => (

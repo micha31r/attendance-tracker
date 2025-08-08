@@ -1,7 +1,7 @@
 "use client"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Member, MembersArraySchema, MemberSchema, parseMemberJSON } from "@/lib/data/member"
+import { Member, parseMemberJSON } from "@/lib/data/member"
 import { MemberTable } from "./member-table"
 import { useEffect, useState } from "react";
 import { CodeEditor } from "./code-editor";
