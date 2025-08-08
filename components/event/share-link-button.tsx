@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export function ShareLinkButton({ className, link }: { className?: string, link: string }) {
   return (
     <Button
-      variant={"outline"}
+      variant={"default"}
       className={cn("my-auto", className)}
       onClick={() => navigator.clipboard.writeText(link)}
     >
