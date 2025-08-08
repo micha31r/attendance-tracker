@@ -26,7 +26,9 @@ function buildResponderLink(eventId: string) {
   return `${process.env.NEXT_PUBLIC_DOMAIN}/r/${eventId}`
 }
 
-export default async function EventDetailPage({ params }: { params: { eventId: string } }) {
+export default async function EventDetailPage({ params }: { params: Promise<{ eventId: string }> }) {
+  const { eventId } = await params;
+
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.getClaims();
@@ -34,15 +36,15 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
     redirect("/auth/login");
   }
 
-  const event = await getEventById(params.eventId);
+  const event = await getEventById(eventId);
   if (!event) {
     console.error("Event not found, redirecting to /org");
     redirect("/org");
   }
 
-  const responderLink = buildResponderLink(params.eventId);
+  const responderLink = buildResponderLink(eventId);
 
-  const attendancePrivateInfo = await getAttendancePrivateInfoByEventId(params.eventId);
+  const attendancePrivateInfo = await getAttendancePrivateInfoByEventId(eventId);
 
   const acceptAttendance = Boolean(event.attendance_open_from && event.attendance_open_until && new Date(event.attendance_open_from) < new Date() && new Date(event.attendance_open_until) > new Date());
 

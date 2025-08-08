@@ -16,25 +16,27 @@ export default async function RecordAttendancePage({
   params, 
   searchParams 
 }: { 
-  params: { eventId: string }, 
-  searchParams: { email?: string }
+  params: Promise<{ eventId: string }>, 
+  searchParams: Promise<{ email?: string }>
 }) {
+  const { eventId } = await params;
+  const { email: searchParamsEmail } = await searchParams;
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getClaims();
   const isAuthenticated = Boolean(!error && data?.claims);
-  const email = data?.claims.email || searchParams.email || null;
+  const email = data?.claims.email || searchParamsEmail || null;
 
   const attendanceDataFunction = isAuthenticated 
     ? getAttendanceByEventIdAndEmail 
     : getAttendanceByEventIdAndEmailAnon;
 
   const attendance = email
-    ? await attendanceDataFunction(params.eventId, email) 
+    ? await attendanceDataFunction(eventId, email) 
     : null;
 
   const isAttendanceRecorded = Boolean(attendance?.present || attendance?.apology);
 
-  const event = await getPublicEventInfoById(params.eventId);
+  const event = await getPublicEventInfoById(eventId);
   if (!event) {
     console.error("Event not found, redirecting to /org");
     redirect("/org");
@@ -42,7 +44,7 @@ export default async function RecordAttendancePage({
 
   const acceptAttendance = Boolean(event.attendance_open_from && event.attendance_open_until && new Date(event.attendance_open_from) < new Date() && new Date(event.attendance_open_until) > new Date());
 
-  const attendancePublicInfo = await getAttendancePublicInfoByEventId(params.eventId);
+  const attendancePublicInfo = await getAttendancePublicInfoByEventId(eventId);
 
   return (
     <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
@@ -80,12 +82,12 @@ export default async function RecordAttendancePage({
 
                 {/* Can only unmark present when event is accepting attendance */}
                 {acceptAttendance && attendance?.present && (
-                  <UnmarkPresentButton eventId={params.eventId} email={email} isAuthenticated={isAuthenticated} />
+                  <UnmarkPresentButton eventId={eventId} email={email} isAuthenticated={isAuthenticated} />
                 )}
 
                 {/* Apology can be withdrawn anytime */}
                 {attendance?.apology && (
-                  <UnmarkApologyButton eventId={params.eventId} email={email} isAuthenticated={isAuthenticated} />
+                  <UnmarkApologyButton eventId={eventId} email={email} isAuthenticated={isAuthenticated} />
                 )}
               </AlertDescription>
             </Alert>
@@ -112,7 +114,7 @@ export default async function RecordAttendancePage({
       </div>
 
       {!isAttendanceRecorded && (
-        <AttendanceTabs acceptAttendance={acceptAttendance} eventId={params.eventId} email={email} isAuthenticated={isAuthenticated} />
+        <AttendanceTabs acceptAttendance={acceptAttendance} eventId={eventId} email={email} isAuthenticated={isAuthenticated} />
       )}
 
       <Card>

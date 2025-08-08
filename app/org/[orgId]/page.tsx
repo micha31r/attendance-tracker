@@ -57,7 +57,8 @@ async function getAttendanceStreakData(org: Organisation): Promise<AttendanceStr
   return attendanceStreakData;
 }
 
-export default async function OrgDetailPage({ params }: { params: { orgId: string } }) {
+export default async function OrgDetailPage({ params }: { params: Promise<{ orgId: string }> }) {
+  const { orgId } = await params;
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.getClaims();
@@ -65,7 +66,7 @@ export default async function OrgDetailPage({ params }: { params: { orgId: strin
     redirect("/auth/login");
   }
 
-  const org = await getOrganisationById(params.orgId);
+  const org = await getOrganisationById(orgId);
   if (!org) {
     redirect("/org");
   }

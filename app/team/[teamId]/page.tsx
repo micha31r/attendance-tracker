@@ -49,7 +49,8 @@ async function getAttendanceStreakData(team: Team, allEvents: Event[]): Promise<
   return attendanceStreakData;
 }
 
-export default async function TeamDetailPage({ params }: { params: { orgId: string, teamId: string } }) {
+export default async function TeamDetailPage({ params }: { params: Promise<{ teamId: string }> }) {
+  const { teamId } = await params;
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.getClaims();
@@ -57,7 +58,7 @@ export default async function TeamDetailPage({ params }: { params: { orgId: stri
     redirect("/auth/login");
   }
 
-  const team = await getTeamById(params.teamId);
+  const team = await getTeamById(teamId);
   if (!team) {
     console.error("Team not found, redirecting to /org");
     redirect("/org");

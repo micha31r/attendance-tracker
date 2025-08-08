@@ -132,7 +132,7 @@ export function MemberTable({ data, addMemberAction, onChange }: { data: Member[
   }
 
   React.useEffect(() => {
-    const selectedRows = Object.keys(rowSelection).filter(key => data[key])
+    const selectedRows = Object.keys(rowSelection).filter(key => data[parseInt(key)])
     const selectedMembers = selectedRows.map(rowIndex => data[parseInt(rowIndex)])
     setSelectedMembers(selectedMembers)
     console.log('Selected members:', selectedMembers)
