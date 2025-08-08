@@ -55,6 +55,35 @@ export async function createEvent(
   return data
 }
 
+export async function updateEvent(
+  id: string,
+  name: string,
+  event_start: string,
+  attendance_open_from: string | Date,
+  attendance_open_until: string | Date,
+): Promise<Event | null> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('event')
+    .update({ 
+      name, 
+      event_start, 
+      attendance_open_from, 
+      attendance_open_until
+    })
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error updating event:', error)
+    return null
+  }
+
+  return data
+}
+
 export async function getEventById(id: string): Promise<Event | null> {
   const supabase = await createClient()
 

@@ -5,7 +5,9 @@ import { Member } from "@/lib/data/member";
 import EventMemberView from "@/components/event/event-member-view";
 import {
   Card,
+  CardAction,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -14,6 +16,11 @@ import { ShareLinkButton } from "@/components/event/share-link-button";
 import Link from "next/link";
 import AttendeeTablePrivate from "@/components/attendance/attendee-table-private";
 import { getAttendancePrivateInfoByEventId } from "@/lib/data/attendance";
+import { DateTimeFormat } from "@/components/datetime-format";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { UpdateEventSheet } from "@/components/event/edit-event-sheet";
+import { Button } from "@/components/ui/button";
+import { Hourglass } from "lucide-react";
 
 function buildResponderLink(eventId: string) {
   return `${process.env.NEXT_PUBLIC_DOMAIN}/r/${eventId}`
@@ -36,6 +43,8 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
   const responderLink = buildResponderLink(params.eventId);
 
   const attendancePrivateInfo = await getAttendancePrivateInfoByEventId(params.eventId);
+
+  const acceptAttendance = Boolean(event.attendance_open_from && event.attendance_open_until && new Date(event.attendance_open_from) < new Date() && new Date(event.attendance_open_until) > new Date());
 
   return (
     <main className="max-w-screen-sm mx-auto p-4 space-y-8">
@@ -61,6 +70,43 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Event details</CardTitle>
+          <CardDescription>Attendees can check in as present only during the designated attendance window. Apologies can be submitted at any time.</CardDescription>
+          <CardAction>
+            <UpdateEventSheet trigger={<Button variant="outline">Edit details</Button>} contextData={{
+              id: event.id,
+              name: event.name,
+              event_start: event.event_start as string,
+              attendance_open_from: event.attendance_open_from as string,
+              attendance_open_until: event.attendance_open_until as string,
+            }} />
+          </CardAction>
+        </CardHeader>
+        <CardContent className="space-y-4">
+            
+            {acceptAttendance && (
+              <Alert variant={"default"}>
+                <Hourglass />
+                <AlertTitle>Currently accepting attendance</AlertTitle>
+              </Alert>
+            )}
+            <div>
+              <p className="text-sm text-muted-foreground">Event start</p>
+              <p className="text-lg font-semibold"><DateTimeFormat date={event.event_start as string} connective=" / " /></p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Attendance open from</p>
+              <p className="text-lg font-semibold">{event.attendance_open_from ? <DateTimeFormat date={event.attendance_open_from as string} connective=" / " /> : "Not set"}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Attendance open until</p>
+              <p className="text-lg font-semibold">{event.attendance_open_until ? <DateTimeFormat date={event.attendance_open_until as string} connective=" / " /> : "Not set"}</p>
+            </div>
         </CardContent>
       </Card>
 
