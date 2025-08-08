@@ -66,7 +66,12 @@ export function AddEventGuestSheet({ trigger }: { trigger: React.ReactNode }) {
       return
     }
 
-    const mergedMembers = mergeMemberData([values], (event.attendee_data || []) as Member[])
+    const mergedMembers = mergeMemberData([{
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      guest: true, // Mark as guest
+    }], (event.attendee_data || []) as Member[])
     const data = await updateEventAttendeeData(eventId, mergedMembers)
     if (!data) {
       console.error("Failed to update event attendees")
