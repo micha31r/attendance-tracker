@@ -15,6 +15,9 @@ import {
 import { AttendanceStreak, AttendanceStreakData } from "@/components/attendance/attendance-streak";
 import { getEventsByOrganisationId } from "@/lib/data/event";
 import { getAttendancePrivateInfoByEventId } from "@/lib/data/attendance";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 async function getAttendanceStreakData(org: Organisation): Promise<AttendanceStreakData> {
   const attendanceStreakData: AttendanceStreakData = {};
@@ -73,7 +76,16 @@ export default async function OrgDetailPage({ params }: { params: { orgId: strin
 
   return (
     <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
-      <h1 className="text-4xl font-semibold">{org.name}</h1>
+      <div className="space-y-1">
+        <h3 className="text-primary">Organisation</h3>
+        <h1 className="text-4xl font-semibold">{org.name}</h1>
+        <Button variant="secondary" size="sm" className="mt-1" asChild>
+          <Link href={`/org`}>
+            <ArrowLeft />
+            Home
+          </Link>
+        </Button>
+      </div>
 
       <Card>
         <CardHeader>
