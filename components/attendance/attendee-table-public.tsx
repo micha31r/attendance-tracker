@@ -38,7 +38,7 @@ export default function AttendeeTablePublic({ data }: { data: AttendancePublicIn
             </TableCell>
             <TableCell className="font-medium text-muted-foreground">{member.guest ? "Guest" : "Member"}</TableCell>
             <TableCell className="font-medium text-muted-foreground">
-              <DateTimeFormat date={member.updated_at} />
+              <DateTimeFormat date={member.updated_at} connective=" / " />
             </TableCell>
           </TableRow>
         ))}

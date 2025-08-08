@@ -45,7 +45,7 @@ export default function AttendeeTablePrivate({ data }: { data: AttendancePrivate
             </TableCell>
             <TableCell className="font-medium">{member.guest ? "Guest" : "Member"}</TableCell>
             <TableCell className="font-medium">
-              <DateTimeFormat date={member.updated_at} />
+              <DateTimeFormat date={member.updated_at} connective=" / " />
             </TableCell>
             <TableCell className={`font-medium ${!member.apology ? "text-muted-foreground" : ""}`}>{member.apology ? member.apology_message : "-"}</TableCell>
           </TableRow>

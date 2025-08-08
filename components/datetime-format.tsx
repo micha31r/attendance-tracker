@@ -18,7 +18,7 @@ export function TimeFormat({ date }: { date: string }) {
   return <span>{formattedDate}</span>;
 }
 
-export function DateTimeFormat({ date }: { date: string }) {
+export function DateTimeFormat({ date, connective = " " }: { date: string, connective?: string }) {
   const dateObj = new Date(date);
   const formattedDate = dateObj.toLocaleDateString("en-AU", {
     year: "numeric",
@@ -31,5 +31,5 @@ export function DateTimeFormat({ date }: { date: string }) {
     hour12: true,
   });
 
-  return <span>{formattedDate} at {formattedTime}</span>;
+  return <span>{formattedDate}{connective}{formattedTime}</span>;
 }
