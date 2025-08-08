@@ -17,10 +17,10 @@ import Link from "next/link";
 import AttendeeTablePrivate from "@/components/attendance/attendee-table-private";
 import { getAttendancePrivateInfoByEventId } from "@/lib/data/attendance";
 import { DateTimeFormat } from "@/components/datetime-format";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { UpdateEventSheet } from "@/components/event/edit-event-sheet";
 import { Button } from "@/components/ui/button";
-import { Hourglass } from "lucide-react";
+import { Hourglass, LinkIcon } from "lucide-react";
 
 function buildResponderLink(eventId: string) {
   return `${process.env.NEXT_PUBLIC_DOMAIN}/r/${eventId}`
@@ -47,15 +47,21 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
   const acceptAttendance = Boolean(event.attendance_open_from && event.attendance_open_until && new Date(event.attendance_open_from) < new Date() && new Date(event.attendance_open_until) > new Date());
 
   return (
-    <main className="max-w-screen-sm mx-auto p-4 space-y-8">
+    <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
       <h1 className="text-4xl font-semibold">{event.name}</h1>
       
       <Card>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-[1fr_max-content] gap-8 sm:gap-4">
-            <div className="space-y-4 max-w-xs">
-              <h1 className="leading-none">Responder link</h1>
-              <Link className="block break-all leading-normal" href={responderLink}>{responderLink}</Link>
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_max-content] gap-8">
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <h1 className="leading-none font-semibold">Responder link</h1>
+                <p className="text-muted-foreground text-sm">Please share this link with your attendees. Members will need to log in to access it, while guests should check in using the email listed in the attendee table.</p>
+              </div>
+              <Alert variant={"default"}>
+                <LinkIcon />
+                <AlertTitle><Link className="block break-all leading-normal" href={responderLink}>{responderLink}</Link></AlertTitle>
+              </Alert>
               <ShareLinkButton className="w-max" link={responderLink} />
             </div>
 
