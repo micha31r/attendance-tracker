@@ -34,6 +34,7 @@ import { CreateEventContextData, CreateEventSheet } from "./create-event-sheet"
 import { Event } from "@/lib/data/event"
 import { Member } from "@/lib/data/member"
 import { DateFormat, DateTimeFormat } from "../datetime-format"
+import { DeleteEventDialog } from "../event/delete-event-dialog"
 
 export const columns: ColumnDef<Event>[] = [
   {
@@ -115,7 +116,7 @@ export const columns: ColumnDef<Event>[] = [
                 <Link href={`/event/${event.id}`}>Manage event</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Delete event</DropdownMenuItem>
+              <DeleteEventDialog name={event.name} id={event.id} trigger={<Button variant="ghost" className="w-full justify-start rounded-sm px-2 py-1.5 text-sm text-destructive!">Delete event</Button>} />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

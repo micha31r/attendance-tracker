@@ -208,3 +208,30 @@ export async function getPublicEventInfoById(id: string): Promise<EventPublicInf
     created_at: data.created_at
   }
 }
+
+export async function deleteEvent(id: string): Promise<boolean> {
+  const supabase = await createClient()
+
+  // Delete all associated attendance records
+  const { error: attendanceError } = await supabase
+    .from('attendance')
+    .delete()
+    .eq('event_id', id)
+
+  if (attendanceError) {
+    console.error('Error deleting event:', attendanceError)
+    return false
+  }
+
+  const { error: eventError } = await supabase
+    .from('event')
+    .delete()
+    .eq('id', id)
+
+  if (eventError) {
+    console.error('Error deleting event:', eventError)
+    return false
+  }
+
+  return true
+}
