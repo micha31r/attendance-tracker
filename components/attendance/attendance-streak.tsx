@@ -16,6 +16,7 @@ import { AttendancePrivateInfo } from "@/lib/data/attendance"
 import AttendanceBlock, { AttendanceStatus, getAttendanceStatus } from "./attendance-block"
 import { CopyButton } from "../copy-button"
 import { AttendancePopoverContent } from "./attendance-popover-content"
+import { cn } from "@/lib/utils"
 
 export interface AttendanceStreakInfo {
   firstName: string;
@@ -55,7 +56,11 @@ export function AttendanceStreak({ data }: { data: AttendanceStreakData }) {
                         <AttendanceBlock
                           status={getAttendanceStatus(attendance.present, attendance.apology) as AttendanceStatus}
                           className="w-6 h-6"
-                        />
+                        >
+                          <span className={cn("text-xs text-foreground/50 ", {
+                            "text-white/80": getAttendanceStatus(attendance.present, attendance.apology) === "present"
+                          })}>{entry.attendanceData.length - idx}</span>
+                        </AttendanceBlock>
                       </PopoverTrigger>
                       <PopoverContent className="w-80 mx-4">
                         <AttendancePopoverContent eventId={attendance.event_id} />

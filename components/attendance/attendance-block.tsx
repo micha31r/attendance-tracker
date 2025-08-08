@@ -25,7 +25,7 @@ export default function AttendanceBlock({
   children?: React.ReactNode,
 }) {
   return (
-    <div {...props} className={cn(`w-6 h-6 ${colorMap[status]} text-white rounded-md shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]`, className)}>
+    <div {...props} className={cn(`flex items-center justify-center w-6 h-6 ${colorMap[status]} text-white rounded-md shadow-[inset_0_0_0_1px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]`, className)}>
       {children}
     </div>
   );
