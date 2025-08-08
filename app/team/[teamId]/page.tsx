@@ -1,10 +1,49 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getTeamById } from "@/lib/data/team";
+import { getTeamById, Team } from "@/lib/data/team";
 import { EventTable } from "@/components/org/event-table";
-import { getEventsByTeamId } from "@/lib/data/event";
+import { Event, getEventsByTeamId } from "@/lib/data/event";
 import TeamMemberView from "@/components/org/team-member-view";
 import { Member } from "@/lib/data/member";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import  { AttendanceStreak, AttendanceStreakData } from "@/components/attendance/attendance-streak";
+import { getAttendancePrivateInfoByEventId } from "@/lib/data/attendance";
+
+async function getAttendanceStreakData(team: Team, allEvents: Event[]): Promise<AttendanceStreakData> {
+  const attendanceStreakData: AttendanceStreakData = {};
+
+  if (team.default_attendee_data) {
+    for (const member of team.default_attendee_data as Member[]) {
+      if (!(member.email in attendanceStreakData)) {
+        attendanceStreakData[member.email] = {
+          firstName: member.firstName,
+          lastName: member.lastName,
+          email: member.email,
+          attendanceData: [],
+        }
+      }
+    }
+  }
+
+  const attendanceDataPromises = allEvents.map(event => 
+    getAttendancePrivateInfoByEventId(event.id)
+  );
+
+  const allAttendanceData = (await Promise.all(attendanceDataPromises)).flat();
+
+  for (const attendance of allAttendanceData) {
+    if (attendance.email in attendanceStreakData) {
+      attendanceStreakData[attendance.email].attendanceData.push(attendance);
+    }
+  }
+
+  return attendanceStreakData;
+}
 
 export default async function TeamDetailPage({ params }: { params: { orgId: string, teamId: string } }) {
   const supabase = await createClient();
@@ -22,21 +61,41 @@ export default async function TeamDetailPage({ params }: { params: { orgId: stri
 
   const allEvents = await getEventsByTeamId(team.id);
 
+  const attendanceStreakData = await getAttendanceStreakData(team, allEvents);
+
   return (
-    <main className="max-w-screen-sm mx-auto p-4 space-y-8">
+    <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
       <h1 className="text-4xl font-semibold">{team.name}</h1>
-      <div>
-        <h1 className="text-2xl font-semibold">Events</h1>
-        <EventTable data={allEvents} contextData={{ team_id: team.id }} />
-      </div>
-      <div className="space-y-4">
-        <h1 className="text-2xl font-semibold">Team members</h1>
-        <TeamMemberView initialData={(team.default_attendee_data || []) as Member[]} teamId={team.id} />
-      </div>
-      <div className="space-y-4">
-        <h1 className="text-2xl font-semibold">Attendance</h1>
-        <div className="min-h-96"></div>
-      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Events</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <EventTable data={allEvents} contextData={{ team_id: team.id, attendee_data: team.default_attendee_data || [] }} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Team members</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TeamMemberView initialData={(team.default_attendee_data || []) as Member[]} teamId={team.id} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Attendance graph</CardTitle>
+        </CardHeader>
+        <CardContent className="px-0">
+          <div className="px-6 overflow-x-scroll">
+            <AttendanceStreak data={attendanceStreakData} />
+          </div>
+          <div className="px-6"></div>
+        </CardContent>
+      </Card>
     </main>
   );
 }

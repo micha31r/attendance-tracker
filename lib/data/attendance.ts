@@ -24,6 +24,7 @@ export interface AttendancePublicInfo {
 }
 
 export interface AttendancePrivateInfo extends AttendancePublicInfo {
+  event_id: string,
   lastName: string,
   email: string,
   apology_message?: string,
@@ -447,6 +448,7 @@ export async function getAttendancePrivateInfoByEventId(
   const attendancePrivateInfo: AttendancePrivateInfo[] = attendanceData.map((attendance) => {
     const memberData = eventData.attendee_data.find((member: Member) => member.email === attendance.email);
     return {
+      event_id: eventId,
       firstName: memberData?.firstName || "Unknown",
       lastName: memberData?.lastName || "Unknown",
       email: attendance.email,

@@ -30,9 +30,3 @@ export default function AttendanceBlock({
     </div>
   );
 }
-
-{/* <div className="flex gap-2">
-  <AttendanceBlock status={"present"} />
-  <AttendanceBlock status={"absent"} />
-  <AttendanceBlock status={"apology"} />
-</div> */}

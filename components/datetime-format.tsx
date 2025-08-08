@@ -1,24 +1,24 @@
-export function DateFormat({ date }: { date: string }) {
+export function DateFormat({ className, date }: { className?: string, date: string }) {
   const formattedDate = new Date(date).toLocaleDateString("en-AU", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 
-  return <span>{formattedDate}</span>;
+  return <span className={className}>{formattedDate}</span>;
 }
 
-export function TimeFormat({ date }: { date: string }) {
+export function TimeFormat({ className, date }: { className?: string, date: string }) {
   const formattedDate = new Date(date).toLocaleTimeString("en-AU", {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
   });
 
-  return <span>{formattedDate}</span>;
+  return <span className={className}>{formattedDate}</span>;
 }
 
-export function DateTimeFormat({ date, connective = " " }: { date: string, connective?: string }) {
+export function DateTimeFormat({ className, date, connective = " " }: { className?: string, date: string, connective?: string }) {
   const dateObj = new Date(date);
   const formattedDate = dateObj.toLocaleDateString("en-AU", {
     year: "numeric",
@@ -31,5 +31,5 @@ export function DateTimeFormat({ date, connective = " " }: { date: string, conne
     hour12: true,
   });
 
-  return <span>{formattedDate}{connective}{formattedTime}</span>;
+  return <span className={className}>{formattedDate}{connective}{formattedTime}</span>;
 }
