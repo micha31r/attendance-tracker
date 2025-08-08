@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getOrganisationById, Organisation } from "@/lib/data/organisation";
-import { getTeamsByOrganisationId, Team } from "@/lib/data/team";
+import { getTeamsByOrganisationId } from "@/lib/data/team";
 import { TeamTable } from "@/components/org/team-table";
 import OrgMemberView from "@/components/org/org-member-view";
 import { Member } from "@/lib/data/member";

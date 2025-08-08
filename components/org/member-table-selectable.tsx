@@ -3,7 +3,6 @@
 import * as React from "react"
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -13,19 +12,9 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
   Table,
@@ -36,29 +25,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Member } from "@/lib/data/member"
-
-const memberData: Member[] = [
-  {
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com"
-  },
-  {
-    firstName: "Jane",
-    lastName: "Smith",
-    email: "jane.smith@example.com",
-  },
-  {
-    firstName: "Alice",
-    lastName: "Johnson",
-    email: "alice.johnson@example.com"
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com"
-  },
-]
 
 export const columns: ColumnDef<Member>[] = [
   {
