@@ -44,7 +44,7 @@ export default async function RecordAttendancePage({
   const attendancePublicInfo = await getAttendancePublicInfoByEventId(params.eventId);
 
   return (
-    <main className="max-w-screen-sm mx-auto p-4 space-y-8">
+    <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
       <h1 className="text-4xl font-semibold">{event.name}</h1>
 
         <div className="space-y-2">
