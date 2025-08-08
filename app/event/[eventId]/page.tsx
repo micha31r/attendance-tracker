@@ -66,7 +66,7 @@ export default async function EventDetailPage({ params }: { params: { eventId: s
 
       <Card>
         <CardHeader>
-          <CardTitle>Expected Attendees</CardTitle>
+          <CardTitle>Expected attendees</CardTitle>
         </CardHeader>
         <CardContent>
           <EventMemberView initialData={(event.attendee_data || []) as Member[]} eventId={event.id} />
