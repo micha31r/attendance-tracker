@@ -1,12 +1,23 @@
 import HalfToneGradient from "@/components/half-tone-gradient";
+import { LogoutButton } from "@/components/logout-button";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  
+  const { data, error } = await supabase.auth.getClaims();
+  const isAuthenticated = !error && data?.claims;
+
   return (
     <main className="min-h-svh flex flex-col items-center justify-center relative">
       <HalfToneGradient className="absolute inset-0" />
-      
+
+      {isAuthenticated && (
+        <LogoutButton variant="secondary" className="absolute top-4 right-4" />
+      )}
+
       <div className="relative z-10 text-center flex gap-8 flex-col items-center px-4">
         <h1 className="text-3xl sm:text-5xl max-w-lg sm:max-w-2xl">
           Effortless attendance tracking across meetings and teams.
