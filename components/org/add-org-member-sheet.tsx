@@ -94,7 +94,8 @@ export function AddOrgMemberSheet({ trigger }: { trigger: React.ReactNode }) {
 
       setOrganisation(org)
     })()
-  }, [orgId, router])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router])
   
   if (!organisation) {
     return null

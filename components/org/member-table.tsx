@@ -136,7 +136,8 @@ export function MemberTable({ data, addMemberAction, onChange }: { data: Member[
     const selectedMembers = selectedRows.map(rowIndex => data[parseInt(rowIndex)])
     setSelectedMembers(selectedMembers)
     console.log('Selected members:', selectedMembers)
-  }, [rowSelection, data])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowSelection])
 
   const table = useReactTable({
     data,

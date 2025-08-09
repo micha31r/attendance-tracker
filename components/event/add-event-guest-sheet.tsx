@@ -99,7 +99,8 @@ export function AddEventGuestSheet({ trigger }: { trigger: React.ReactNode }) {
 
       setEvent(event)
     })()
-  }, [eventId, router])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router])
 
   if (!event) {
     return null
