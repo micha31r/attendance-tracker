@@ -12,11 +12,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import  { AttendanceStreak, AttendanceStreakData } from "@/components/attendance/attendance-streak";
+import  { AttendanceStreakData } from "@/components/attendance/attendance-streak";
 import { getAttendancePrivateInfoByEventId } from "@/lib/data/attendance";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { StreakToggle } from "@/components/attendance/streak-toggle";
 
 async function getAttendanceStreakData(team: Team, allEvents: Event[]): Promise<AttendanceStreakData> {
   const attendanceStreakData: AttendanceStreakData = {};
@@ -101,18 +102,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ tea
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Attendance streak</CardTitle>
-          <CardDescription>Streak is ordered from the most recent event (on the left) to the oldest.</CardDescription>
-        </CardHeader>
-        <CardContent className="px-0">
-          <div className="px-6 overflow-x-scroll">
-            <AttendanceStreak data={attendanceStreakData} />
-          </div>
-          <div className="px-6"></div>
-        </CardContent>
-      </Card>
+      <StreakToggle data={attendanceStreakData} />
     </main>
   );
 }
