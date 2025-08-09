@@ -61,7 +61,7 @@ export default async function RecordAttendancePage({
             <AlertDescription>
               <p>
                 If you are a member of this organisation, you must log in to record your attendance or submit an apology. Guests can simply enter their email address without logging in.
-                <br /><Link href="/auth/login" className="underline">Go to login</Link>
+                <br /><Link href={`/auth/login?next=${encodeURIComponent(`/r/${eventId}`)}`} className="underline">Go to login</Link>
               </p>
             </AlertDescription>
           </Alert>

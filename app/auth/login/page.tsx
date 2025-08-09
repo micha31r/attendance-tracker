@@ -2,12 +2,13 @@ import { LoginForm } from "@/components/login-form";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-export default async function Page() {
+export default async function Page({ searchParams }: { searchParams: Promise<{ next: string }>  }) {
+  const { next } = await searchParams;
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.getClaims();
   if (!error && data?.claims) {
-    redirect("/org");
+    redirect(next || "/org");
   }
 
   return (
