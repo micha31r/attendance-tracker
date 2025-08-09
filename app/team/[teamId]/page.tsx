@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import  { AttendanceStreakData } from "@/components/attendance/attendance-streak";
+import  { AttendanceStreak, AttendanceStreakData } from "@/components/attendance/attendance-streak";
 import { getAttendancePrivateInfoByEventId } from "@/lib/data/attendance";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -102,7 +102,9 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ tea
         </CardContent>
       </Card>
 
-      <StreakToggle data={attendanceStreakData} />
+      <StreakToggle>
+        <AttendanceStreak data={attendanceStreakData} />
+      </StreakToggle>
     </main>
   );
 }

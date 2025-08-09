@@ -1,11 +1,10 @@
 "use client"
 
 import { useState } from "react";
-import { AttendanceStreak, AttendanceStreakData } from "./attendance-streak";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 
-export function StreakToggle({ data }: { data: AttendanceStreakData }) {
+export function StreakToggle({ children }: { children: React.ReactNode }) {
   const [isStreakVisible, setIsStreakVisible] = useState(false);
 
   const toggleStreakVisibility = () => {
@@ -28,7 +27,7 @@ export function StreakToggle({ data }: { data: AttendanceStreakData }) {
       </CardHeader>
       <CardContent className="px-0">
         <div className="px-6 overflow-x-scroll">
-          <AttendanceStreak data={data} />
+          {children}
         </div>
         <div className="px-6"></div>
       </CardContent>
