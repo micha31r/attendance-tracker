@@ -34,7 +34,7 @@ export default async function OrgDetailPage({ params }: { params: Promise<{ orgI
   const allTeams = await getTeamsByOrganisationId(org.id);
 
   return (
-    <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
+    <main className="max-w-screen-lg mx-auto p-4 py-8 space-y-8">
       <div className="space-y-1">
         <h3 className="text-primary">Organisation</h3>
         <h1 className="text-4xl font-semibold">{org.name}</h1>

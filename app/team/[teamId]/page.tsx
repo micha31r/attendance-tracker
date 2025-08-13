@@ -35,7 +35,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ tea
   const allEvents = await getEventsByTeamId(team.id);
 
   return (
-    <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
+    <main className="max-w-screen-lg mx-auto p-4 py-8 space-y-8">
       <div className="space-y-1">
         <h3 className="text-primary">Team</h3>
         <h1 className="text-4xl font-semibold">{team.name}</h1>

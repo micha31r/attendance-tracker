@@ -49,7 +49,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ ev
   const acceptAttendance = Boolean(event.attendance_open_from && event.attendance_open_until && new Date(event.attendance_open_from) < new Date() && new Date(event.attendance_open_until) > new Date());
 
   return (
-    <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
+    <main className="max-w-screen-lg mx-auto p-4 py-8 space-y-8">
       <div className="space-y-1">
         <h3 className="text-primary">Event</h3>
         <h1 className="text-4xl font-semibold">{event.name}</h1>
