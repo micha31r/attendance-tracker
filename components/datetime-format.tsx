@@ -1,3 +1,5 @@
+"use client"
+
 export function DateFormat({ className, date }: { className?: string, date: string }) {
   const formattedDate = new Date(date).toLocaleDateString("en-AU", {
     year: "numeric",
