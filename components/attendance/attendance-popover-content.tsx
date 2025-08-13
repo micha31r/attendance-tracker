@@ -5,12 +5,13 @@ import { DateTimeFormat } from "../datetime-format";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Separator } from "@/components/ui/separator"
 
 function Loading() {
   return <div className="text-muted-foreground">Loading ...</div>;
 }
 
-export function AttendancePopoverContent({ eventId }: { eventId: string }) {
+export function AttendancePopoverContent({ eventId, children }: { eventId: string, children?: React.ReactNode }) {
   const [event, setEvent] = useState<Event>()
   const [team, setTeam] = useState<Team>()
 
@@ -49,6 +50,14 @@ export function AttendancePopoverContent({ eventId }: { eventId: string }) {
         <p className="text-sm text-muted-foreground">Attendance open until</p>
         <p className="text-md font-semibold">{event.attendance_open_until ? <DateTimeFormat date={event.attendance_open_until as string} connective=" / " /> : "Not set"}</p>
       </div>
+      {children && (
+        <>
+          <Separator />
+          <div>
+            {children}
+          </div>
+        </>
+      )}
       <Button asChild variant={"secondary"}>
         <Link href={`/event/${event.id}`}>View Event</Link>
       </Button>

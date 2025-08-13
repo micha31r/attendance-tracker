@@ -64,7 +64,14 @@ export function AttendanceStreak({ data }: { data: AttendanceStreakData }) {
                         </AttendanceBlock>
                       </PopoverTrigger>
                       <PopoverContent className="w-80 mx-4">
-                        <AttendancePopoverContent eventId={attendance.event_id} />
+                        <AttendancePopoverContent eventId={attendance.event_id}>
+                          {attendance.apology && (
+                            <div>
+                              <p className="text-sm text-muted-foreground mb-1">Apology</p>
+                              <p className="text-sm">{attendance.apology_message}</p>
+                            </div>
+                          )}
+                        </AttendancePopoverContent>
                       </PopoverContent>
                     </Popover>
                   ))}
