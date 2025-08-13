@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getTeamById, Team } from "@/lib/data/team";
 import { EventTable } from "@/components/org/event-table";
-import { Event, getEventsByTeamId } from "@/lib/data/event";
+import { getEventsByTeamId } from "@/lib/data/event";
 import TeamMemberView from "@/components/org/team-member-view";
 import { Member } from "@/lib/data/member";
 import {
@@ -12,43 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import  { AttendanceStreak, AttendanceStreakData } from "@/components/attendance/attendance-streak";
-import { getAttendancePrivateInfoByEventId } from "@/lib/data/attendance";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { StreakToggle } from "@/components/attendance/streak-toggle";
-
-async function getAttendanceStreakData(team: Team, allEvents: Event[]): Promise<AttendanceStreakData> {
-  const attendanceStreakData: AttendanceStreakData = {};
-
-  if (team.default_attendee_data) {
-    for (const member of team.default_attendee_data as Member[]) {
-      if (!(member.email in attendanceStreakData)) {
-        attendanceStreakData[member.email] = {
-          firstName: member.firstName,
-          lastName: member.lastName,
-          email: member.email,
-          attendanceData: [],
-        }
-      }
-    }
-  }
-
-  const attendanceDataPromises = allEvents.map(event => 
-    getAttendancePrivateInfoByEventId(event.id)
-  );
-
-  const allAttendanceData = (await Promise.all(attendanceDataPromises)).flat();
-
-  for (const attendance of allAttendanceData) {
-    if (attendance.email in attendanceStreakData) {
-      attendanceStreakData[attendance.email].attendanceData.push(attendance);
-    }
-  }
-
-  return attendanceStreakData;
-}
+import { TeamAttendanceStreak } from "@/components/team/team-attendance-streak";
 
 export default async function TeamDetailPage({ params }: { params: Promise<{ teamId: string }> }) {
   const { teamId } = await params;
@@ -66,8 +33,6 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ tea
   }
 
   const allEvents = await getEventsByTeamId(team.id);
-
-  const attendanceStreakData = await getAttendanceStreakData(team, allEvents);
 
   return (
     <main className="max-w-screen-md mx-auto p-4 py-8 space-y-8">
@@ -102,9 +67,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ tea
         </CardContent>
       </Card>
 
-      <StreakToggle>
-        <AttendanceStreak data={attendanceStreakData} />
-      </StreakToggle>
+      <TeamAttendanceStreak team={team} allEvents={allEvents} />
     </main>
   );
 }
