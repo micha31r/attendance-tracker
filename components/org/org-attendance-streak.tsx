@@ -5,47 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { Button } from "../ui/button";
 import { AttendanceStreak, AttendanceStreakData } from "../attendance/attendance-streak";
 import { Organisation } from "@/lib/data/organisation";
-import { getEventsByOrganisationId } from "@/lib/data/event";
-import { getAttendancePrivateInfoByEventId } from "@/lib/data/attendance";
-import { Member } from "@/lib/data/member";
-
-async function getAttendanceStreakData(org: Organisation): Promise<AttendanceStreakData> {
-  const attendanceStreakData: AttendanceStreakData = {};
-
-  // Populate with org member data
-  if (org.member_data) {
-    for (const member of org.member_data as Member[]) {
-      if (!(member.email in attendanceStreakData)) {
-        attendanceStreakData[member.email] = {
-          firstName: member.firstName,
-          lastName: member.lastName,
-          email: member.email,
-          attendanceData: [],
-        }
-      }
-    }
-  }
-
-  // Get all events in org
-  const allEvents = await getEventsByOrganisationId(org.id);
-
-  // Get attendance for each event
-  const attendanceDataPromises = allEvents.map(event => 
-    getAttendancePrivateInfoByEventId(event.id)
-  );
-
-  // Flatten the attendance data
-  const allAttendanceData = (await Promise.all(attendanceDataPromises)).flat();
-
-  // Populate attendance streak data
-  for (const attendance of allAttendanceData) {
-    if (attendance.email in attendanceStreakData) {
-      attendanceStreakData[attendance.email].attendanceData.push(attendance);
-    }
-  }
-
-  return attendanceStreakData;
-}
+import { getOrgAttendanceStreakData } from "@/lib/data/streak";
 
 export function OrgAttendanceStreak({ org }: { org: Organisation }) {
   const [attendanceStreakData, setAttendanceStreakData] = useState<AttendanceStreakData>()
@@ -54,7 +14,7 @@ export function OrgAttendanceStreak({ org }: { org: Organisation }) {
   async function onClick() {
     try {
       setDisabled(true)
-      const data = await getAttendanceStreakData(org)
+      const data = await getOrgAttendanceStreakData(org)
       setAttendanceStreakData(data)
     } catch {
       setDisabled(false)
