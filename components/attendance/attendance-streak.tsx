@@ -49,18 +49,18 @@ export function AttendanceStreak({ data }: { data: AttendanceStreakData }) {
               <CopyButton className="h-max p-1 px-1.5 text-xs text-muted-foreground" text={entry.email} />
             </TableCell>
             <TableCell>
-              <div className="flex gap-2 w-24">
-                <div className="flex gap-1">
-                  {entry.attendanceData.map((attendance, idx) => (
+              {/* <div className="flex gap-2 w-24"> */}
+                <div className="flex gap-1 w-full">
+                  {entry.attendanceData.slice().reverse().map((attendance, idx) => (
                     <Popover key={idx}>
                       <PopoverTrigger>
                         <AttendanceBlock
                           status={getAttendanceStatus(attendance.present, attendance.apology) as AttendanceStatus}
-                          className="w-6 h-6"
+                          className="w-6! h-6!"
                         >
                           <span className={cn("text-xs text-foreground/50 ", {
                             "text-white/80": getAttendanceStatus(attendance.present, attendance.apology) === "present"
-                          })}>{entry.attendanceData.length - idx}</span>
+                          })}>{idx + 1}</span>
                         </AttendanceBlock>
                       </PopoverTrigger>
                       <PopoverContent className="w-80 mx-4">
@@ -72,7 +72,7 @@ export function AttendanceStreak({ data }: { data: AttendanceStreakData }) {
                     <span className="text-muted-foreground">No data yet</span>
                   )}
                 </div>
-              </div>
+              {/* </div> */}
             </TableCell>
           </TableRow>
         ))}

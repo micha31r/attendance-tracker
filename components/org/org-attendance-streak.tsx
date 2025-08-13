@@ -73,7 +73,7 @@ export function OrgAttendanceStreak({ org }: { org: Organisation }) {
     <Card>
       <CardHeader>
         <CardTitle>Attendance streak</CardTitle>
-        <CardDescription>Streak is ordered from the most recent event (on the left) to the oldest.</CardDescription>
+        <CardDescription>Click on a streak entry to view event details.</CardDescription>
       </CardHeader>
       <CardContent className="px-0">
         <div className="px-6 overflow-x-scroll">
