@@ -243,3 +243,20 @@ export async function deleteEvent(id: string): Promise<boolean> {
 
   return true
 }
+
+export async function isUserEventAdmin(eventId: string, userId: string) {
+  const supabase = await dangerCreateServerRoleClient()
+
+  const { data, error } = await supabase
+    .from('event')
+    .select('id, team!inner( organisation!inner( owner_id ) )')
+    .eq('id', eventId)
+    .eq('team.organisation.owner_id', userId)
+
+  if (error) {
+    console.error('Error checking user event admin status:', error)
+    return false
+  }
+
+  return data && data.length > 0;
+}

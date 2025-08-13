@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getPublicEventInfoById } from "@/lib/data/event";
+import { getPublicEventInfoById, isUserEventAdmin } from "@/lib/data/event";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { CheckCircle, Lock, Text, TimerIcon } from "lucide-react";
+import { ArrowLeft, CheckCircle, Lock, Text, TimerIcon } from "lucide-react";
 import { AttendanceTabs } from "@/components/r/attendance-tabs";
 import { getAttendanceByEventIdAndEmail, getAttendanceByEventIdAndEmailAnon, getAttendancePublicInfoByEventId } from "@/lib/data/attendance";
 import UnmarkPresentButton from "@/components/r/unmark-present-button";
@@ -11,6 +11,7 @@ import UnmarkApologyButton from "@/components/r/unmark-apology-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AttendeeTablePublic from "@/components/attendance/attendee-table-public";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default async function RecordAttendancePage({ 
   params, 
@@ -46,11 +47,21 @@ export default async function RecordAttendancePage({
 
   const attendancePublicInfo = await getAttendancePublicInfoByEventId(eventId);
 
+  const isEventAdmin = (data?.claims && await isUserEventAdmin(eventId, data.claims.sub)) ?? false;
+
   return (
     <main className="max-w-screen-lg mx-auto p-4 py-8 space-y-8">
       <div className="space-y-1">
         <h3 className="text-primary">Event</h3>
         <h1 className="text-4xl font-semibold">{event.name}</h1>
+        {isEventAdmin && (
+          <Button variant="secondary" size="sm" className="mt-1" asChild>
+            <Link href={`/event/${eventId}`}>
+              <ArrowLeft />
+              Manage event
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div className="space-y-2">
