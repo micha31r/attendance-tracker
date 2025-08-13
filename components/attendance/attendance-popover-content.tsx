@@ -1,24 +1,34 @@
-import { getEventById } from "@/lib/data/event";
-import { getTeamById } from "@/lib/data/team";
+"use client"
+import { Event, getEventById } from "@/lib/data/event";
+import { getTeamById, Team } from "@/lib/data/team";
 import { DateTimeFormat } from "../datetime-format";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-function FailedToLoad() {
-  return <div className="text-muted-foreground">Failed to load event details.</div>;
+function Loading() {
+  return <div className="text-muted-foreground">Loading ...</div>;
 }
 
-export async function AttendancePopoverContent({ eventId }: { eventId: string }) {
-  const event = await getEventById(eventId);
+export function AttendancePopoverContent({ eventId }: { eventId: string }) {
+  const [event, setEvent] = useState<Event>()
+  const [team, setTeam] = useState<Team>()
 
-  if (!event) {
-    return <FailedToLoad />;
-  }
+  useEffect(() => {
+    (async () => {
+      const event = await getEventById(eventId)
+      if (!event) return
+      
+      const team = await getTeamById(event.team_id)
+      if (!team) return
 
-  const team = await getTeamById(event.team_id);
+      setEvent(event)
+      setTeam(team)
+    })()
+  }, [eventId])
 
-  if (!team) {
-    return <FailedToLoad />;
+  if (!event || !team) {
+    return <Loading />;
   }
 
   return (
